@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/io
-import gleam_mutants/stryker_html
+import smolmut/stryker_html
 import stryker_schema_fixture
 
 pub fn main() {

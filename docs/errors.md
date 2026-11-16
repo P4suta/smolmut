@@ -1,18 +1,18 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
 # Error codes
 
-Every diagnostic `gleam-mutants` writes carries a `GMU` code, and every code appears here.
+Every diagnostic `smolmut` writes carries a `GMU` code, and every code appears here.
 The code is the stable part: the sentence beside it is written for a reader and may be reworded, the code is what a script matches on and what an issue report should name.
 
 Diagnostics go to stderr, never to stdout, so `--json` output stays pipeable while the run still explains itself.
 A text diagnostic is one line:
 
 ```text
-gleam-mutants: GMU2002: no gleam.toml found in this directory or its parents
+smolmut: GMU2002: no gleam.toml found in this directory or its parents
 ```
 
 Under `--log-format json` the same diagnostic is one JSON object per line, with `level` (`info`, `warning`, or `error`), `code`, `message`, and a `usage` string.

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::{candidate, runner, supervisor};
@@ -12,7 +12,7 @@ const DEADLINE: Duration = Duration::from_secs(900);
 const CLEANUP_DEADLINE: Duration = Duration::from_secs(10);
 const RESOURCE_KILL: i32 = 137;
 const VERSION: &str = "Kani Rust Verifier 0.68.0";
-const POSITIVE_SUMMARY: &str = "8 successfully verified harnesses, 0 failures, 8 total";
+const POSITIVE_SUMMARY: &str = "9 successfully verified harnesses, 0 failures, 9 total";
 const NEGATIVE_SUMMARY: &str = "0 successfully verified harnesses, 1 failures, 1 total";
 
 fn counterexample(success: bool, diagnostics: &str, harness: &str) -> bool {
@@ -32,7 +32,7 @@ fn text(output: &Output) -> String {
 }
 
 fn check(image: &str, directory: &Path, label: &str, args: &[&str]) -> Result<Output, String> {
-    let name = format!("gleam-mutants-release-proof-{}-{label}", std::process::id());
+    let name = format!("smolmut-release-proof-{}-{label}", std::process::id());
     let mut command = Command::new("docker");
     command
         .args([
@@ -172,6 +172,12 @@ pub fn prove() -> Result<(), String> {
             "(true, Existing::Missing) => WritePlan::Reuse,",
             "writes_preserve_verified_outputs",
         ),
+        (
+            "package-name",
+            "&& !name.starts_with(COMMUNITY_PREFIX.as_bytes())",
+            "&& name.starts_with(COMMUNITY_PREFIX.as_bytes())",
+            "admitted_package_names_avoid_the_core_team_prefix",
+        ),
     ];
     for (label, original, broken, harness) in controls {
         if source.matches(original).count() != 1 {
@@ -199,7 +205,7 @@ pub fn prove() -> Result<(), String> {
         }
     }
     println!(
-        "Source-bound Kani policy proofs passed with nine rejected broken implementations; source SHA256 {}",
+        "Source-bound Kani policy proofs passed with ten rejected broken implementations; source SHA256 {}",
         candidate::digest(source.as_bytes())
     );
     Ok(())

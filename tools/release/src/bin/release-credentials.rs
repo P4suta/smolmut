@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use gleam_mutants_release::{credentials, registry::Registry};
+use smolmut_release::{credentials, registry::Registry};
 use std::process::ExitCode;
 
 fn run(args: &[String]) -> Result<(), String> {

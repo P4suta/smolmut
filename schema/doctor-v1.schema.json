@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gleam-mutants.invalid/schema/doctor-v1.schema.json",
-  "title": "gleam-mutants doctor output v1",
+  "$id": "https://smolmut.invalid/schema/doctor-v1.schema.json",
+  "title": "smolmut doctor output v1",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "workspace", "config_ok", "workspace_writable", "cache_writable", "temporary_writable", "tools"],

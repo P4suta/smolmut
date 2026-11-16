@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/option.{Some}
 import gleam/string
-import gleam_mutants/core/path
-import gleam_mutants/engine.{Options}
-import gleam_mutants/snapshot
 import simplifile
+import smolmut/core/path
+import smolmut/engine.{Options}
+import smolmut/snapshot
 
 pub fn main() {
   let options = Options(..engine.default_options(), strict: Some(False))

@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
 import gleam/list
 import gleam/string
-import gleam_mutants/cache
-import gleam_mutants/core/filesystem_entry
-import gleam_mutants/core/path
-import gleam_mutants/platform
-import gleam_mutants/snapshot
 import simplifile
+import smolmut/cache
+import smolmut/core/filesystem_entry
+import smolmut/core/path
+import smolmut/platform
+import smolmut/snapshot
 
 pub fn main() {
   native_names_cannot_redirect_snapshot_reads_or_writes_test()
@@ -26,7 +26,7 @@ pub fn main() {
 fn fixture() -> String {
   let root =
     platform.temporary_directory()
-    <> "/gleam-mutants-filesystem-"
+    <> "/smolmut-filesystem-"
     <> platform.random_nonce()
   let assert Ok(Nil) = simplifile.create_directory(root)
   root

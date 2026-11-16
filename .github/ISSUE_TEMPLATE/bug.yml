@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 ---
 
 name: Bug report
-description: Report a reproducible defect in gleam_mutants
+description: Report a reproducible defect in smolmut
 title: "[Bug]: "
 labels:
   - bug
@@ -26,7 +26,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: gleam_mutants version or commit
+      label: smolmut version or commit
       placeholder: 1.0.0 or a commit SHA
     validations:
       required: true

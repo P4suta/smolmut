@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::candidate::{self, Version};
 use crate::constants;
-use gleam_mutants_release_core::Existing;
 use serde_json::Value;
+use smolmut_release_core::Existing;
 use std::io::Write;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -32,13 +32,15 @@ impl Registry {
     fn metadata(&self, version: &Version) -> String {
         match self {
             Self::Hex => format!(
-                "{}/packages/gleam_mutants/releases/{}",
+                "{}/packages/{}/releases/{}",
                 constants::HEX_API,
+                candidate::PACKAGE,
                 version.as_str()
             ),
             Self::Npm => format!(
-                "{}/gleam-mutants/{}",
+                "{}/{}/{}",
                 constants::NPM_REGISTRY,
+                candidate::PACKAGE,
                 version.as_str()
             ),
         }
@@ -46,13 +48,16 @@ impl Registry {
     fn archive(&self, version: &Version) -> String {
         match self {
             Self::Hex => format!(
-                "{}/gleam_mutants-{}.tar",
+                "{}/{}-{}.tar",
                 constants::HEX_ARCHIVES,
+                candidate::PACKAGE,
                 version.as_str()
             ),
             Self::Npm => format!(
-                "{}/gleam-mutants/-/gleam-mutants-{}.tgz",
+                "{}/{}/-/{}-{}.tgz",
                 constants::NPM_REGISTRY,
+                candidate::PACKAGE,
+                candidate::PACKAGE,
                 version.as_str()
             ),
         }
@@ -81,7 +86,7 @@ fn request(url: &str, request: Request<'_>) -> Result<Response, String> {
         "--max-filesize",
         &MAXIMUM_RESPONSE_BYTES.to_string(),
         "--user-agent",
-        "gleam-mutants-release/0.0.0",
+        "smolmut-release/0.0.0",
         "--write-out",
         "\n%{http_code}",
     ]);
@@ -193,7 +198,7 @@ pub fn observe(
 
 pub fn verify_npm_publication(version: &Version, expected_digest: &str) -> Result<(), String> {
     println!("npm publish returned success; verifying public availability without another upload");
-    match gleam_mutants_release_core::await_matching(
+    match smolmut_release_core::await_matching(
         || observe(Registry::Npm, version, expected_digest),
         || std::thread::sleep(NPM_READBACK_INTERVAL),
     )? {

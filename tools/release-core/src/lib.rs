@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 #![no_std]
@@ -84,6 +84,106 @@ mod identity_tests {
             ("1", "0", ControllerIdentityError::Empty),
         ] {
             assert_eq!(ControllerIdentity::parse(run, attempt), Err(error));
+        }
+    }
+}
+
+/// The prefix that `gleam publish` reserves for packages the Gleam core team maintains.
+pub const CORE_TEAM_PREFIX: &str = "gleam_";
+
+/// The prefix that `gleam publish` admits despite the core team reservation.
+pub const COMMUNITY_PREFIX: &str = "gleam_community_";
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PackageNameRefusal {
+    Malformed,
+    ReservedPrefix,
+}
+
+impl PackageNameRefusal {
+    pub fn message(self) -> &'static str {
+        match self {
+            Self::Malformed => {
+                "package name must start with a lowercase ASCII letter, continue with lowercase ASCII letters, digits, or underscores, and not end with an underscore"
+            }
+            Self::ReservedPrefix => {
+                "package name uses the gleam_ prefix that gleam publish reserves for the Gleam core team"
+            }
+        }
+    }
+}
+
+/// Admits a package name that both Hex and `gleam publish` accept without a core team password.
+pub fn admit_package_name(name: &str) -> Result<(), PackageNameRefusal> {
+    admit_package_bytes(name.as_bytes())
+}
+
+fn admit_package_bytes(name: &[u8]) -> Result<(), PackageNameRefusal> {
+    let well_formed = match name {
+        [first, rest @ ..] => {
+            first.is_ascii_lowercase()
+                && rest
+                    .iter()
+                    .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || *byte == b'_')
+                && rest.last() != Some(&b'_')
+        }
+        [] => false,
+    };
+    if !well_formed {
+        return Err(PackageNameRefusal::Malformed);
+    }
+    if name.starts_with(CORE_TEAM_PREFIX.as_bytes())
+        && !name.starts_with(COMMUNITY_PREFIX.as_bytes())
+    {
+        return Err(PackageNameRefusal::ReservedPrefix);
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod package_name_tests {
+    use super::{PackageNameRefusal, admit_package_name};
+
+    #[test]
+    fn the_core_team_prefix_is_refused() {
+        for name in [
+            "gleam_mutants",
+            "gleam_x",
+            "gleam_commune",
+            "gleam_community",
+        ] {
+            assert_eq!(
+                admit_package_name(name),
+                Err(PackageNameRefusal::ReservedPrefix),
+                "{name}"
+            );
+        }
+    }
+
+    #[test]
+    fn community_and_unprefixed_names_are_admitted() {
+        for name in [
+            "smolmut",
+            "gleam_community_colour",
+            "gleamy",
+            "gleam",
+            "a",
+            "x1_y",
+        ] {
+            assert_eq!(admit_package_name(name), Ok(()), "{name}");
+        }
+    }
+
+    #[test]
+    fn names_hex_would_reject_are_refused() {
+        for name in [
+            "", "Smolmut", "1mut", "_mut", "smol-mut", "smolmut_", "smol mut", "smölmut", "gleam_",
+        ] {
+            assert_eq!(
+                admit_package_name(name),
+                Err(PackageNameRefusal::Malformed),
+                "{name}"
+            );
         }
     }
 }
@@ -477,6 +577,32 @@ mod proofs {
         assert!((plan == WritePlan::Create) == (verified && existing == Existing::Missing));
         assert!((plan == WritePlan::Reuse) == (verified && existing == Existing::Matching));
         assert!((plan == WritePlan::Refuse) == (!verified || existing == Existing::Conflicting));
+    }
+
+    #[kani::proof]
+    #[kani::unwind(19)]
+    fn admitted_package_names_avoid_the_core_team_prefix() {
+        let bytes: [u8; 17] = kani::any();
+        let length: usize = kani::any();
+        kani::assume(length <= bytes.len());
+        let candidate = &bytes[..length];
+        let result = super::admit_package_bytes(candidate);
+        let community = candidate.starts_with(b"gleam_community_");
+        if candidate.starts_with(b"gleam_") && !community {
+            assert!(result.is_err());
+        }
+        if result.is_ok() {
+            assert!(candidate[0].is_ascii_lowercase());
+            assert!(candidate[length - 1] != b'_');
+            assert!(
+                candidate.iter().all(|byte| byte.is_ascii_lowercase()
+                    || byte.is_ascii_digit()
+                    || *byte == b'_')
+            );
+        }
+        kani::cover!(result.is_ok());
+        kani::cover!(result == Err(super::PackageNameRefusal::ReservedPrefix));
+        kani::cover!(result.is_ok() && community);
     }
 
     #[kani::proof]

@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/option.{None, Some}
-import gleam_mutants/api
-import gleam_mutants/types
+import smolmut/api
+import smolmut/types
 
 pub fn api_defaults_require_explicit_report_writes_test() {
   let options = api.default_options()

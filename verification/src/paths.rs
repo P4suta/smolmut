@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::fragment::{bind, boolean, choice, natural, scalar_literal};
@@ -121,8 +121,8 @@ end GlobDerived
 #[cfg(test)]
 mod tests {
     use super::*;
-    const PATH: &str = include_str!("../../src/gleam_mutants/core/path.gleam");
-    const GLOB: &str = include_str!("../../src/gleam_mutants/core/glob.gleam");
+    const PATH: &str = include_str!("../../src/smolmut/core/path.gleam");
+    const GLOB: &str = include_str!("../../src/smolmut/core/glob.gleam");
 
     #[test]
     fn derives_path_reduction_and_wildcard_guards() {

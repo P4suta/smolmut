@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import crypto from "node:crypto";
@@ -13,7 +13,7 @@ const provenance = JSON.parse(
 	fs.readFileSync(path.join(vendor, "PROVENANCE.json"), "utf8"),
 );
 const assetSource = fs.readFileSync(
-	path.join(root, "src", "gleam_mutants", "mte_asset.gleam"),
+	path.join(root, "src", "smolmut", "mte_asset.gleam"),
 	"utf8",
 );
 const chunkSource = assetSource.slice(assetSource.indexOf("fn chunks()"));
@@ -83,7 +83,7 @@ if (!vendoredSchema.equals(upstreamSchema))
 if (!vendoredLicense.equals(upstreamLicense))
 	throw new Error("Vendored MTE LICENSE differs from official package");
 
-const distributionRoot = path.join(root, "priv", "gleam_mutants");
+const distributionRoot = path.join(root, "priv", "smolmut");
 const distributionPairs = [
 	[path.join(distributionRoot, "LICENSE-MIT"), path.join(root, "LICENSE-MIT")],
 	[

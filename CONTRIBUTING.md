@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -21,7 +21,7 @@ Run the task twice and update expected counts and the [usage table](docs/usage.m
 Never float a branch or tag or weaken an expected count to hide a failure.
 Expected survivors are compatibility outcomes, so this task does not use a minimum-score gate.
 
-Keep pure domain logic under `src/gleam_mutants/core`.
+Keep pure domain logic under `src/smolmut/core`.
 Operating-system operations belong behind capabilities and the platform FFI.
 New operators require byte-preservation tests, compiler-validation fixtures, and an operator-version decision.
 The supported product boundary is defined by the [ADR](docs/adr/mutation-testing-package-boundary.md).

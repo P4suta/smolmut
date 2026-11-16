@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::candidate::{self, Revision};
@@ -107,7 +107,7 @@ pub(crate) fn format(number: u64, source: &Revision) -> Result<Revision, String>
         ("GITHUB_REF_PROTECTED", "true"),
         (
             "GITHUB_WORKFLOW_REF",
-            "P4suta/gleam-mutants/.github/workflows/release-please.yml@refs/heads/main",
+            "P4suta/smolmut/.github/workflows/release-please.yml@refs/heads/main",
         ),
     ] {
         if runner::environment(name)? != expected {

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 pub fn derive(source: &str) -> Result<String, String> {
@@ -36,7 +36,7 @@ pub fn derive(source: &str) -> Result<String, String> {
 mod tests {
     use super::*;
 
-    const SOURCE: &str = include_str!("../../src/gleam_mutants/core/filesystem_entry.gleam");
+    const SOURCE: &str = include_str!("../../src/smolmut/core/filesystem_entry.gleam");
 
     #[test]
     fn derives_the_production_string_boundary() {

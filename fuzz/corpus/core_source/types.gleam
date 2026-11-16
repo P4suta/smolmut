@@ -1,10 +1,10 @@
 //// Public mutation-testing options and results.
 
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/option.{type Option}
-import gleam_mutants/core/span
+import smolmut/core/span
 
 /// A validated, zero-based, end-exclusive byte span.
 pub type Span =

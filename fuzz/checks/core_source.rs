@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use gleam_mutants_verification::{fragment, outcome, paths, scoring, selection, span};
+use smolmut_verification::{fragment, outcome, paths, scoring, selection, span};
 use std::collections::BTreeSet;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]

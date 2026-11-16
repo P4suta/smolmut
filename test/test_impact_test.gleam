@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/result
 import gleam/string
-import gleam_mutants/core/path
-import gleam_mutants/platform
-import gleam_mutants/test_impact
 import simplifile
+import smolmut/core/path
+import smolmut/platform
+import smolmut/test_impact
 
 fn manifest() -> test_impact.Manifest {
   test_impact.Manifest(
@@ -104,7 +104,7 @@ pub fn selection_is_atomically_written_below_the_snapshot_test() {
   let root =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-impact-" <> platform.random_nonce(),
+      "smolmut-impact-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(root)
   let assert Ok(target) =
@@ -112,10 +112,10 @@ pub fn selection_is_atomically_written_below_the_snapshot_test() {
   let assert Ok(source) = simplifile.read(target)
   let assert Ok(decoded) = test_impact.decode_selection(source)
   let assert Ok(entries) =
-    simplifile.read_directory(path.join(root, ".gleam_mutants"))
+    simplifile.read_directory(path.join(root, ".smolmut"))
   let assert Ok(Nil) = simplifile.delete(root)
 
-  assert string.starts_with(target, path.join(root, ".gleam_mutants"))
+  assert string.starts_with(target, path.join(root, ".smolmut"))
   assert decoded
     == test_impact.SelectionFile(1, "fixture-runner", "erlang", ["leaf-a"])
   assert list.length(entries) == 1
@@ -124,22 +124,17 @@ pub fn selection_is_atomically_written_below_the_snapshot_test() {
 
 /// The name handed to a test process is relative, whatever the path it names.
 ///
-/// The process is already in the workspace, and both runners resolve what
-/// they are given against the directory they are in before checking it is
-/// below `.gleam_mutants`. That check builds its own side from `getcwd`, so a
-/// workspace reached through a symbolic link — macOS answers `getcwd` with
-/// the `/private/var` a `/var` path resolves to — has one spelling the tool
-/// used and another the runner knows it by, and an absolute name is refused
-/// by the very run that asked for it.
+/// The process is already in the workspace, and both runners resolve what they are given against the directory they are in before checking it is below `.smolmut`.
+/// That check builds its own side from `getcwd`, so a workspace reached through a symbolic link — macOS answers `getcwd` with the `/private/var` a `/var` path resolves to — has one spelling the tool used and another the runner knows it by, and an absolute name is refused by the very run that asked for it.
 pub fn protocol_name_is_relative_to_the_workspace_test() {
   assert test_impact.protocol_name(
-      "/var/folders/t/snapshot/.gleam_mutants/test-impact-erlang-ab12.json",
+      "/var/folders/t/snapshot/.smolmut/test-impact-erlang-ab12.json",
     )
-    == ".gleam_mutants/test-impact-erlang-ab12.json"
+    == ".smolmut/test-impact-erlang-ab12.json"
   assert test_impact.protocol_name(
-      "/private/var/folders/t/snapshot/.gleam_mutants/test-impact-erlang-ab12.json",
+      "/private/var/folders/t/snapshot/.smolmut/test-impact-erlang-ab12.json",
     )
     == test_impact.protocol_name(
-      "/var/folders/t/snapshot/.gleam_mutants/test-impact-erlang-ab12.json",
+      "/var/folders/t/snapshot/.smolmut/test-impact-erlang-ab12.json",
     )
 }

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -668,7 +668,7 @@ pub fn canonical_source(source: &str) -> Result<String, String> {
 mod tests {
     use super::*;
 
-    const SOURCE: &str = include_str!("../../src/gleam_mutants/core/span.gleam");
+    const SOURCE: &str = include_str!("../../src/smolmut/core/span.gleam");
 
     #[test]
     fn derives_the_complete_production_span_module() {

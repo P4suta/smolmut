@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/io
 import gleam/json
 import gleam/list
 import gleam/string
-import gleam_mutants/core/bytes
-import gleam_mutants/core/operator
-import gleam_mutants/engine
-import gleam_mutants/platform
-import gleam_mutants/snapshot
+import smolmut/core/bytes
+import smolmut/core/operator
+import smolmut/engine
+import smolmut/platform
+import smolmut/snapshot
 
 pub fn main() {
   let assert [workspace] = platform.arguments()

@@ -1,18 +1,18 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 pub const SOURCES: &[&str] = &[
-    "src/gleam_mutants/core/limits.gleam",
-    "src/gleam_mutants/core/filesystem_entry.gleam",
-    "src/gleam_mutants/core/span.gleam",
-    "src/gleam_mutants/core/outcome.gleam",
-    "src/gleam_mutants/core/score.gleam",
-    "src/gleam_mutants/core/exit_policy.gleam",
-    "src/gleam_mutants/core/operator.gleam",
-    "src/gleam_mutants/core/plan.gleam",
-    "src/gleam_mutants/types.gleam",
-    "src/gleam_mutants/core/path.gleam",
-    "src/gleam_mutants/core/glob.gleam",
+    "src/smolmut/core/limits.gleam",
+    "src/smolmut/core/filesystem_entry.gleam",
+    "src/smolmut/core/span.gleam",
+    "src/smolmut/core/outcome.gleam",
+    "src/smolmut/core/score.gleam",
+    "src/smolmut/core/exit_policy.gleam",
+    "src/smolmut/core/operator.gleam",
+    "src/smolmut/core/plan.gleam",
+    "src/smolmut/types.gleam",
+    "src/smolmut/core/path.gleam",
+    "src/smolmut/core/glob.gleam",
 ];
 
 pub struct Suite {

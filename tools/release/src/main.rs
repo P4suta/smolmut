@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use gleam_mutants_release::{candidate, evidence, github, proofs, runner};
+use smolmut_release::{candidate, evidence, github, proofs, runner};
 use std::path::Path;
 use std::process::ExitCode;
 
@@ -10,16 +10,16 @@ fn run(args: &[String]) -> Result<(), String> {
         [] => help(),
         [command] if command == "--help" => help(),
         [command, host, target] if command == "runtime-cell" => {
-            gleam_mutants_release::runtime::cell(host, target)
+            smolmut_release::runtime::cell(host, target)
         }
         [command] if command == "prove" => proofs::prove(),
-        [command] if command == "audit-tools" => gleam_mutants_release::audit::audit(),
+        [command] if command == "audit-tools" => smolmut_release::audit::audit(),
         [command] if command == "proposal-checks" => github::proposal_checks(),
         [command] if command == "controller-check" => {
-            gleam_mutants_release::publication::controller_context()
+            smolmut_release::publication::controller_context()
         }
         [command] if command == "controller-outputs" => {
-            gleam_mutants_release::publication::controller_outputs()
+            smolmut_release::publication::controller_outputs()
         }
         [command, directory] if command == "collect-inputs" => {
             github::collect(Path::new(directory))
@@ -74,7 +74,7 @@ fn run(args: &[String]) -> Result<(), String> {
                     github::attestations(directory, &identity)?;
                 }
                 if command == "plan" {
-                    gleam_mutants_release::publication::plan(directory, &identity)?;
+                    smolmut_release::publication::plan(directory, &identity)?;
                 }
             }
             println!("Candidate source, build, artifacts, and verification inventory match");
@@ -86,7 +86,7 @@ fn run(args: &[String]) -> Result<(), String> {
 
 fn help() -> Result<(), String> {
     println!(
-        "gleam-mutants-release\n\ncheck-dist DIRECTORY VERSION\ngates-local OUTPUT_DIRECTORY\nruntimes-local OUTPUT_DIRECTORY\ngates-hosted OUTPUT_DIRECTORY\nruntimes-hosted OUTPUT_DIRECTORY\nstage-hosted BUILD_DIRECTORY GATE_DIRECTORY RUNTIME_DIRECTORY OUTPUT_DIRECTORY\nverify DIRECTORY SOURCE VERSION RUN ATTEMPT\nfetch DIRECTORY SOURCE VERSION RUN ATTEMPT\nprove\nproposal-checks\n\nPreparation has no tag, signing, release, or registry-publication operation."
+        "smolmut-release\n\ncheck-dist DIRECTORY VERSION\ngates-local OUTPUT_DIRECTORY\nruntimes-local OUTPUT_DIRECTORY\ngates-hosted OUTPUT_DIRECTORY\nruntimes-hosted OUTPUT_DIRECTORY\nstage-hosted BUILD_DIRECTORY GATE_DIRECTORY RUNTIME_DIRECTORY OUTPUT_DIRECTORY\nverify DIRECTORY SOURCE VERSION RUN ATTEMPT\nfetch DIRECTORY SOURCE VERSION RUN ATTEMPT\nprove\nproposal-checks\n\nPreparation has no tag, signing, release, or registry-publication operation."
     );
     Ok(())
 }

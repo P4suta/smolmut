@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/bit_array
@@ -7,14 +7,14 @@ import gleam/io
 import gleam/list
 import gleam/option.{Some}
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/cache
-import gleam_mutants/core/path
-import gleam_mutants/platform
-import gleam_mutants/snapshot
-import gleam_mutants/stryker_report
-import gleam_mutants/types
 import simplifile
+import smolmut/api
+import smolmut/cache
+import smolmut/core/path
+import smolmut/platform
+import smolmut/snapshot
+import smolmut/stryker_report
+import smolmut/types
 import tomlet
 
 const byte_values = 256
@@ -75,7 +75,7 @@ pub fn main() {
       test_command: Some([
         "node",
         "-e",
-        "if (process.env.GLEAM_MUTANTS_ACTIVE) { process.stdout.write(Buffer.from([255])); process.exit(91); }",
+        "if (process.env.SMOLMUT_ACTIVE) { process.stdout.write(Buffer.from([255])); process.exit(91); }",
       ]),
     )
   let assert Ok(report) = api.run("fixtures/basic_project", options)
@@ -100,11 +100,7 @@ fn check_diagnostic_modes() -> Nil {
   let assert Ok(text) = simplifile.read(configuration)
   let assert Ok(document) = tomlet.parse(text)
   let assert Ok(document) =
-    tomlet.set_string(
-      document,
-      ["tools", "gleam_mutants", "cache", "mode"],
-      "off",
-    )
+    tomlet.set_string(document, ["tools", "smolmut", "cache", "mode"], "off")
   let assert Ok(source) =
     simplifile.read(path.join(root, "src/calculator.gleam"))
   let options =
@@ -116,7 +112,7 @@ fn check_diagnostic_modes() -> Nil {
       test_command: Some([
         "node",
         "-e",
-        "if (process.env.GLEAM_MUTANTS_ACTIVE) { process.stdout.write('private diagnostic marker'); process.exit(91); }",
+        "if (process.env.SMOLMUT_ACTIVE) { process.stdout.write('private diagnostic marker'); process.exit(91); }",
       ]),
     )
   let observed =
@@ -124,7 +120,7 @@ fn check_diagnostic_modes() -> Nil {
       let assert Ok(configured) =
         tomlet.set_string(
           document,
-          ["tools", "gleam_mutants", "report", "diagnostics"],
+          ["tools", "smolmut", "report", "diagnostics"],
           mode,
         )
       let assert Ok(Nil) =
@@ -171,7 +167,7 @@ fn check_two_byte_inputs() -> Nil {
   let directory =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-output-" <> platform.random_nonce(),
+      "smolmut-output-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory(directory)
   let requests =

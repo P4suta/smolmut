@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "gleam-mutants-verification"
+name = "smolmut-verification"
 version = "0.0.0"

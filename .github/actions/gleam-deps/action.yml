@@ -1,5 +1,5 @@
 ---
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 name: Gleam dependencies
@@ -15,10 +15,8 @@ runs:
         version: 2026.10.22
         install: true
         cache: true
-    # Gleam keeps one package cache per user, outside the workspace, and the
-    # manifests pin exactly what goes in it. A hit means `deps download` makes
-    # no request to Hex at all, which is what keeps a shared runner address
-    # running into Hex's rate limit from failing a run of ours.
+    # The cache holds the user-wide Gleam package store that manifests pin.
+    # A hit skips Hex entirely, so its per-address rate limit cannot fail CI.
     - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
       with:
         path: |
@@ -30,8 +28,7 @@ runs:
           'fixtures/*/manifest.toml') }}
         restore-keys: |
           gleam-hex-${{ runner.os }}-
-    # The unitest fixture is the one workspace whose dependencies the root
-    # manifest does not already name, so its packages are fetched here rather
-    # than by whichever smoke happens to snapshot it first.
+    # The root manifest omits the unitest fixture's dependencies.
+    # Fetch them here instead of inside whichever smoke snapshots it first.
     - run: node scripts/deps-download.mjs . fixtures/unitest_project
       shell: bash

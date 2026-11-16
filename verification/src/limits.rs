@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::collections::BTreeMap;
@@ -213,7 +213,7 @@ pub fn derive(source: &str) -> Result<String, String> {
 mod tests {
     use super::*;
 
-    const SOURCE: &str = include_str!("../../src/gleam_mutants/core/limits.gleam");
+    const SOURCE: &str = include_str!("../../src/smolmut/core/limits.gleam");
 
     #[test]
     fn derives_all_production_predicates() {

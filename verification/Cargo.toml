@@ -1,14 +1,14 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 [package]
-name = "gleam-mutants-verification"
+name = "smolmut-verification"
 version = "0.0.0"
 edition = "2024"
 rust-version = "1.99"
 publish = false
 license = "MIT OR Apache-2.0"
-default-run = "gleam-mutants-verification"
+default-run = "smolmut-verification"
 
 [lints.rust]
 unsafe_code = "forbid"

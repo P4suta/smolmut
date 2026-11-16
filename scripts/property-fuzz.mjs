@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
 
-const durationSeconds = Number(process.env.GLEAM_MUTANTS_FUZZ_SECONDS || 900);
+const durationSeconds = Number(process.env.SMOLMUT_FUZZ_SECONDS || 900);
 const deadline = Date.now() + durationSeconds * 1000;
 let seed = 1;
 let batches = 0;

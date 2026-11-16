@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -11,7 +11,7 @@ The [package boundary ADR](adr/mutation-testing-package-boundary.md) records thi
 
 ## Source-derived integer decisions
 
-`mise run prove` reads the current [limits module](../src/gleam_mutants/core/limits.gleam).
+`mise run prove` reads the current [limits module](../src/smolmut/core/limits.gleam).
 The unpublished, dependency-free Rust helper parses a closed Gleam fragment of integer constants, typed comparisons, conjunction, and disjunction.
 It lowers those expressions into Lean Boolean decisions over integers.
 It rejects additional declarations, missing predicates, unknown names, arithmetic, calls, imports, and unsupported tokens.
@@ -47,7 +47,7 @@ Generated models and logs are evidence for that invocation; later invocations ge
 
 ## Source-derived filename decisions
 
-The gate also reads the complete [filesystem entry module](../src/gleam_mutants/core/filesystem_entry.gleam).
+The gate also reads the complete [filesystem entry module](../src/smolmut/core/filesystem_entry.gleam).
 A closed translator admits its typed string inequalities, conjunctions, and negated single-character containment checks.
 It refuses other declarations, calls, operators, and literals.
 The model represents a string as its sequence of Unicode scalar values.
@@ -203,7 +203,7 @@ These checks cover that finite corpus and the native boundaries; symlink aliases
 
 Release automation has a separate pure Rust core in `tools/release-core`.
 `mise run prove-release` imports that implementation directly into pinned Kani 0.68.0.
-Eight harnesses check output reuse, finalization, conclusive runtime counts, release identity selection, draft acquisition, phase capabilities, bounded publication readback, and suppressed proposal CI.
+Nine harnesses check output reuse, finalization, conclusive runtime counts, release identity selection, draft acquisition, phase capabilities, bounded publication readback, suppressed proposal CI, and package name admission.
 They cover every admitted Boolean or enum state and all `u64` count and release-ID combinations in those predicates.
 Release selection admits only nonzero IDs, preserves the first match, and refuses another match even when both IDs are equal.
 Its harness checks every selection transition and reachability of the missing, unique, and ambiguous states.
@@ -220,7 +220,11 @@ Matching bytes, conflicts, and read errors stop immediately without a later read
 Persistent absence consumes the full budget with 30 waits and returns missing rather than success.
 The adapter supplies registry reads and a 30-second sleep between attempts after one completed npm publish.
 The proof checks callback results and invocation counts, not provider availability or elapsed time.
-The gate requires eight successful harnesses and separately rejects nine deliberately broken implementations at the corresponding harness.
+The package name harness checks every byte string of up to 17 bytes, which reaches past the 16-byte `gleam_community_` prefix.
+An admitted name matches the Hex name format and never starts with `gleam_` unless it starts with `gleam_community_`.
+`gleam publish` asks for the core team password before publishing a `gleam_` name, and the Hex API applies no such check to a direct upload.
+A release test requires `gleam.toml` to declare the release tool's package name, and `check-dist` refuses a name the policy rejects.
+The gate requires nine successful harnesses and separately rejects ten deliberately broken implementations at the corresponding harness.
 Each negative control selects only its named harness and requires its exact failed-harness summary.
 Tool failure, an empty harness inventory, or a resource stop supplies no proof result.
 The pinned container uses the same bounded supervisor as the Gleam proof gate and records its actual source hash.

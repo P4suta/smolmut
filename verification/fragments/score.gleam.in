@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/float
 import gleam/int
 import gleam/list
-import gleam_mutants/core/outcome.{type Outcome}
-import gleam_mutants/types.{Score}
+import smolmut/core/outcome.{type Outcome}
+import smolmut/types.{Score}
 pub type Score = types.Score
 pub fn calculate(outcomes: List(Outcome)) -> Score {
   let killed = count(outcomes, fn(value) { value == types.__killed })

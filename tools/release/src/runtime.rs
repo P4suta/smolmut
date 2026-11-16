@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::runner;
@@ -26,7 +26,7 @@ pub fn conclusive(report: &Value, target: &str) -> Result<(), String> {
     let total = natural(score, "total")?;
     let killed = natural(score, "killed")?;
     let survived = natural(score, "survived")?;
-    let counts = gleam_mutants_release_core::RuntimeCounts {
+    let counts = smolmut_release_core::RuntimeCounts {
         total,
         killed,
         survived,
@@ -38,8 +38,8 @@ pub fn conclusive(report: &Value, target: &str) -> Result<(), String> {
         rejected: rejected.len() as u64,
     };
     if report["schema_version"] != 1
-        || report["tool"] != "gleam-mutants"
-        || !gleam_mutants_release_core::conclusive_counts(counts)
+        || report["tool"] != "smolmut"
+        || !smolmut_release_core::conclusive_counts(counts)
         || report["selection"]["skipped"] != false
     {
         return Err("runtime compatibility is empty, cached, skipped, or inconclusive".into());
@@ -113,10 +113,8 @@ pub fn cell(host: &str, target: &str) -> Result<(), String> {
         .duration_since(UNIX_EPOCH)
         .map_err(|e| e.to_string())?
         .as_nanos();
-    let temporary = std::env::temp_dir().join(format!(
-        "gleam-mutants-runtime-{}-{nonce}",
-        std::process::id()
-    ));
+    let temporary =
+        std::env::temp_dir().join(format!("smolmut-runtime-{}-{nonce}", std::process::id()));
     copy(Path::new("fixtures/basic_project"), &temporary)?;
     let result = execute(&temporary, host, target);
     let cleanup = fs::remove_dir_all(&temporary);
@@ -136,7 +134,7 @@ fn execute(temporary: &Path, host: &str, target: &str) -> Result<(), String> {
         "javascript"
     };
     let config = format!(
-        "\n[tools.gleam_mutants.test]\ntarget = \"{target_name}\"\nruntime = \"{target}\"\n\n[tools.gleam_mutants.policy]\nstrict = false\nminimum_score = 100\nrequire_mutants = true\n\n[tools.gleam_mutants.report]\ndirectory = \"reports/mutation\"\nformats = [\"json\"]\nhistory = false\n"
+        "\n[tools.smolmut.test]\ntarget = \"{target_name}\"\nruntime = \"{target}\"\n\n[tools.smolmut.policy]\nstrict = false\nminimum_score = 100\nrequire_mutants = true\n\n[tools.smolmut.report]\ndirectory = \"reports/mutation\"\nformats = [\"json\"]\nhistory = false\n"
     );
     fs::OpenOptions::new()
         .append(true)
@@ -170,7 +168,7 @@ fn execute(temporary: &Path, host: &str, target: &str) -> Result<(), String> {
         command.args([
             "run",
             "-m",
-            "gleam_mutants",
+            "smolmut",
             "--target",
             if host == "erlang" {
                 "erlang"
@@ -198,7 +196,7 @@ mod tests {
     use super::conclusive;
 
     fn report() -> serde_json::Value {
-        serde_json::json!({"schema_version":1,"tool":"gleam-mutants","score":{"total":1,"killed":1,"survived":0,"timed_out":0,"errors":0},
+        serde_json::json!({"schema_version":1,"tool":"smolmut","score":{"total":1,"killed":1,"survived":0,"timed_out":0,"errors":0},
             "selection":{"executed":1,"compile_errors":0,"skipped":false},"rejected":[],
             "mutants":[{"mutant":{"id":"first"},"aggregate":"killed","outcomes":[{"runtime":"node","outcome":"killed","cached":false}]}]})
     }

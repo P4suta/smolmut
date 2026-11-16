@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 @target(erlang)
@@ -6,25 +6,25 @@ import gleam/io
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import gleam_mutants/cli
-@target(erlang)
-import gleam_mutants/core/path
-@target(erlang)
-import gleam_mutants/platform
-@target(erlang)
-import gleam_mutants/project_report
-@target(erlang)
-import gleam_mutants/report
-@target(erlang)
-import gleam_mutants/snapshot
-@target(erlang)
-import gleam_mutants/types
-@target(erlang)
-import gleam_mutants/workspace_lock
 @target(erlang)
 import report_test_support
 @target(erlang)
 import simplifile
+import smolmut/cli
+@target(erlang)
+import smolmut/core/path
+@target(erlang)
+import smolmut/platform
+@target(erlang)
+import smolmut/project_report
+@target(erlang)
+import smolmut/report
+@target(erlang)
+import smolmut/snapshot
+@target(erlang)
+import smolmut/types
+@target(erlang)
+import smolmut/workspace_lock
 
 @target(erlang)
 pub fn a_report_history_write_failure_names_its_code_and_path_test() {
@@ -32,7 +32,7 @@ pub fn a_report_history_write_failure_names_its_code_and_path_test() {
   let blocked =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-red-cache-" <> platform.random_nonce(),
+      "smolmut-red-cache-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.write(blocked, "not a directory\n")
   report_test_support.set_cache_directory(blocked)
@@ -60,7 +60,7 @@ pub fn a_project_report_write_failure_names_its_code_and_path_test() {
   let workspace =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-red-report-" <> platform.random_nonce(),
+      "smolmut-red-report-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(workspace)
   let _ = simplifile.set_permissions_octal(workspace, 0o500)
@@ -93,7 +93,7 @@ pub fn a_refused_special_file_names_its_code_and_a_way_forward_test() {
   let workspace =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-red-special-" <> platform.random_nonce(),
+      "smolmut-red-special-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(workspace)
   let assert Ok(Nil) =
@@ -153,7 +153,7 @@ pub fn a_workspace_cache_directory_that_cannot_be_created_names_its_code_and_pat
   let blocked =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-red-lock-" <> platform.random_nonce(),
+      "smolmut-red-lock-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.write(blocked, "not a directory\n")
   report_test_support.set_cache_directory(blocked)
@@ -180,7 +180,7 @@ pub fn a_warning_that_carries_its_code_names_it_once_test() {
   let message = "GMU3001: the snapshot did not compile"
   let line = cli.diagnostic_line("warning", "GMU3001", message, None)
 
-  assert line == "gleam-mutants: GMU3001: the snapshot did not compile"
+  assert line == "smolmut: GMU3001: the snapshot did not compile"
   assert list.length(string.split(line, "GMU3001")) == 2
 }
 
@@ -191,7 +191,7 @@ pub fn a_warning_that_carries_no_code_is_given_one_test() {
       "this run selected no mutant inside a function named `abs`",
       None,
     )
-    == "gleam-mutants: GMU4001: this run selected no mutant inside a function "
+    == "smolmut: GMU4001: this run selected no mutant inside a function "
     <> "named `abs`"
 }
 
@@ -200,8 +200,8 @@ pub fn an_error_line_names_the_code_its_message_carries_test() {
       "error",
       "GMU4005",
       "GMU4005: no mutant with id 0F1E2D lives in this run",
-      Some("usage: gleam-mutants list --mutant <id>"),
+      Some("usage: smolmut list --mutant <id>"),
     )
-    == "gleam-mutants: GMU4005: no mutant with id 0F1E2D lives in this run"
-    <> "\n\nusage: gleam-mutants list --mutant <id>"
+    == "smolmut: GMU4005: no mutant with id 0F1E2D lives in this run"
+    <> "\n\nusage: smolmut list --mutant <id>"
 }

@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -9,36 +9,36 @@ Configuration belongs in `gleam.toml` and is decoded strictly.
 Unknown keys and invalid values produce positioned errors.
 
 ```toml
-[tools.gleam_mutants]
+[tools.smolmut]
 version = 1
 
-[tools.gleam_mutants.mutation]
+[tools.smolmut.mutation]
 include = ["src/**/*.gleam"]
 exclude = ["test/**", "dev/**", "build/**"]
 operators = ["boolean-literal", "integer-arithmetic"]
 
-[tools.gleam_mutants.test]
+[tools.smolmut.test]
 target = "auto"  # auto, erlang, javascript
 runtime = "auto"  # auto, erlang, node, deno, bun
 timeout_ms = 15000
 baseline_runs = 1
 command = ["gleam", "test"]
 
-[tools.gleam_mutants.execution]
+[tools.smolmut.execution]
 jobs = 4
 test_selection = "auto"  # auto, full
 
-[tools.gleam_mutants.cache]
+[tools.smolmut.cache]
 mode = "auto"  # auto, off, read-only, write-only, read-write
 keep_snapshots = 4
 # key = "custom-suite-v1" files = ["test/support.json"] env = ["FEATURE_MODE"]
 
-[tools.gleam_mutants.policy]
+[tools.smolmut.policy]
 strict = false
 minimum_score = 100
 require_mutants = true
 
-[tools.gleam_mutants.report]
+[tools.smolmut.report]
 directory = "reports/mutation"
 formats = ["json", "html"]
 history = true

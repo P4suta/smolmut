@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-import gleam_mutants/core/glob
+import smolmut/core/glob
 
 pub fn globstar_consumes_complete_directories_test() {
   assert !glob.matches("**/app.gleam", "myapp.gleam")

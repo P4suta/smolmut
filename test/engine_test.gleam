@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/string
-import gleam_mutants/core/path
-import gleam_mutants/engine
-import gleam_mutants/platform
-import gleam_mutants/types
 import simplifile
+import smolmut/core/path
+import smolmut/engine
+import smolmut/platform
+import smolmut/types
 
 const calc_source =
   "pub fn add(a: Int, b: Int) -> Int {\n  a + b\n}\n\n"
@@ -19,7 +19,7 @@ fn fresh_root(label: String) -> String {
   let root =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-engine-" <> label <> "-" <> platform.random_nonce(),
+      "smolmut-engine-" <> label <> "-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(root)
   root

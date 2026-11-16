@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 
 The package measures existing test suites through controlled source mutations.
 The [package boundary decision](adr/mutation-testing-package-boundary.md) defines its scope.
-The public modules are the CLI entry point, `gleam_mutants/api`, and `gleam_mutants/types`.
+The public modules are the CLI entry point, `smolmut/api`, and `smolmut/types`.
 Canonical options and result types support typed embedding.
 The CLI owns terminal rendering, GitHub annotations, and exit status.
 The API returns failures and captures child output.
@@ -51,13 +51,13 @@ Input links and special files are rejected.
 A callback-scoped session owns configuration, selection, snapshot, sources, and catalogue.
 Every returned result passes through snapshot disposal and lock release.
 Generated runtime modules exist only inside snapshots.
-Each worker selects its mutant through `GLEAM_MUTANTS_ACTIVE`.
+Each worker selects its mutant through `SMOLMUT_ACTIVE`.
 
 ## Optional selection evidence
 
-With automatic test selection, the instrumented baseline receives `GLEAM_MUTANTS_TEST_IMPACT_FILE`.
+With automatic test selection, the instrumented baseline receives `SMOLMUT_TEST_IMPACT_FILE`.
 A compatible provider writes a versioned manifest with ordered opaque test descriptors and reached mutation sites.
-Workers receive an atomic selector file through `GLEAM_MUTANTS_TEST_SELECTION_FILE`.
+Workers receive an atomic selector file through `SMOLMUT_TEST_SELECTION_FILE`.
 Selectors are not packed into an environment variable.
 
 Evidence is an optimization.

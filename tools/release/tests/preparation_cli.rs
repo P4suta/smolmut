@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::process::Command;
@@ -6,7 +6,7 @@ use std::process::Command;
 #[test]
 fn preparation_has_no_tag_sign_or_publish_command() {
     for operation in ["publish", "tag", "sign", "release", "finalize"] {
-        let output = Command::new(env!("CARGO_BIN_EXE_gleam-mutants-release"))
+        let output = Command::new(env!("CARGO_BIN_EXE_smolmut-release"))
             .arg(operation)
             .output()
             .unwrap();
@@ -70,7 +70,7 @@ fn credential_transport_has_no_local_or_publication_command() {
 
 #[test]
 fn credential_verification_uses_only_identity_gets_and_stdin_authentication() {
-    use gleam_mutants_release::candidate;
+    use smolmut_release::candidate;
     let root =
         std::env::temp_dir().join(format!("gleam-release-credentials-{}", std::process::id()));
     std::fs::create_dir(&root).unwrap();

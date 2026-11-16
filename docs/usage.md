@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -15,27 +15,27 @@ The current package version is 0.1.0.
 Add the Hex package to the target project's development dependencies:
 
 ```sh
-gleam add --dev gleam_mutants
+gleam add --dev smolmut
 ```
 
 Then use its CLI module:
 
 ```sh
-gleam run -m gleam_mutants -- run
+gleam run -m smolmut -- run
 ```
 
 The npm package exposes the same CLI for JavaScript projects:
 
 ```sh
-npm install --global gleam-mutants
-gleam-mutants --version
+npm install --global smolmut
+smolmut --version
 ```
 
-For the Erlang escript, download `gleam-mutants.escript` and `SHA256SUMS` from the matching [GitHub Release](https://github.com/P4suta/gleam-mutants/releases).
+For the Erlang escript, download `smolmut.escript` and `SHA256SUMS` from the matching [GitHub Release](https://github.com/P4suta/smolmut/releases).
 Verify the escript's SHA-256 against its checksum entry, then run:
 
 ```sh
-escript ./gleam-mutants.escript --version
+escript ./smolmut.escript --version
 ```
 
 See the [library guide](library.md) for typed embedding.
@@ -53,15 +53,15 @@ The pins in `mise.toml` define the reproducible development environment.
 ## Commands
 
 ```sh
-gleam run -m gleam_mutants -- doctor
-gleam run -m gleam_mutants -- init
-gleam run -m gleam_mutants -- list
-gleam run -m gleam_mutants -- list --validate --explain
-gleam run -m gleam_mutants -- run
-gleam run -m gleam_mutants -- run --matrix
-gleam run -m gleam_mutants -- run --changed origin/main
-gleam run -m gleam_mutants -- report latest
-gleam run -m gleam_mutants -- cache status
+gleam run -m smolmut -- doctor
+gleam run -m smolmut -- init
+gleam run -m smolmut -- list
+gleam run -m smolmut -- list --validate --explain
+gleam run -m smolmut -- run
+gleam run -m smolmut -- run --matrix
+gleam run -m smolmut -- run --changed origin/main
+gleam run -m smolmut -- report latest
+gleam run -m smolmut -- cache status
 ```
 
 With no arguments, help is shown.
@@ -79,7 +79,7 @@ It returns admitted and rejected candidates with `validated: true`, even if all 
 Display-ID prefixes are collision-checked across the complete selected file set.
 `report latest` emits native JSON; its `--json` alias remains accepted.
 
-Configuration lives in `[tools.gleam_mutants]` in `gleam.toml`.
+Configuration lives in `[tools.smolmut]` in `gleam.toml`.
 Without configuration, mutation selects `src/**/*.gleam`, excludes generated data, runs `gleam test`, and uses at most eight workers.
 The derived timeout is at least ten seconds.
 Strict policy is disabled by default in every terminal and CI context.
@@ -133,8 +133,8 @@ The library emits no annotations or terminal output.
 Clone the repository to work on its implementation:
 
 ```sh
-git clone https://github.com/P4suta/gleam-mutants.git
-cd gleam-mutants
+git clone https://github.com/P4suta/smolmut.git
+cd smolmut
 mise install
 ```
 
@@ -142,7 +142,7 @@ Another local project can use the checkout as a development dependency:
 
 ```toml
 [dev_dependencies]
-gleam_mutants = { path = "../gleam-mutants" }
+smolmut = { path = "../smolmut" }
 ```
 
 A Git dependency must pin a commit.

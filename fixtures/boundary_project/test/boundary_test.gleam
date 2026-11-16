@@ -1,8 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-// These tests pass, and they deliberately leave survivors behind: nothing
-// here calls `is_positive(0)`, and nothing pins `area(Square(_))` down.
+// These tests pass, and they deliberately leave survivors behind: nothing here calls `is_positive(0)`, and nothing pins `area(Square(_))` down.
 
 import boundary.{Circle}
 import gleam/option.{Some}

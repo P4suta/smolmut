@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::fragment::{bind, boolean, choice};
@@ -50,8 +50,8 @@ pub fn derive_policy(source: &str) -> Result<String, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    const SCORE: &str = include_str!("../../src/gleam_mutants/core/score.gleam");
-    const POLICY: &str = include_str!("../../src/gleam_mutants/core/exit_policy.gleam");
+    const SCORE: &str = include_str!("../../src/smolmut/core/score.gleam");
+    const POLICY: &str = include_str!("../../src/smolmut/core/exit_policy.gleam");
 
     #[test]
     fn derives_actual_count_arithmetic_and_retains_the_float_boundary() {

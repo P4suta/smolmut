@@ -1,8 +1,8 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 [package]
-name = "gleam-mutants-release-fuzz"
+name = "smolmut-release-fuzz"
 version = "0.0.0"
 edition = "2024"
 publish = false
@@ -13,9 +13,9 @@ cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4.13"
-gleam-mutants-release = { path = "../tools/release" }
-gleam-mutants-release-core = { path = "../tools/release-core" }
-gleam-mutants-verification = { path = "../verification" }
+smolmut-release = { path = "../tools/release" }
+smolmut-release-core = { path = "../tools/release-core" }
+smolmut-verification = { path = "../verification" }
 
 [[bin]]
 name = "core_source"

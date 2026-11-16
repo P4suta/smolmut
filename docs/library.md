@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -8,15 +8,15 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 Add the Hex package as a development dependency:
 
 ```sh
-gleam add --dev gleam_mutants
+gleam add --dev smolmut
 ```
 
 Use the public API and its shared domain types:
 
 ```gleam
 import gleam/option.{Some}
-import gleam_mutants/api
-import gleam_mutants/types
+import smolmut/api
+import smolmut/types
 
 pub fn inspect_project(
   root: String,

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use super::*;
@@ -26,7 +26,7 @@ fn workspace(label: &str) -> PathBuf {
         .unwrap()
         .as_nanos();
     let path = std::env::temp_dir().join(format!(
-        "gleam-mutants-github-{label}-{}-{nonce}",
+        "smolmut-github-{label}-{}-{nonce}",
         std::process::id()
     ));
     fs::create_dir(&path).unwrap();
@@ -142,7 +142,7 @@ fn native_creation_keeps_response_identity_without_another_lookup() {
                         "api",
                         "--method",
                         "POST",
-                        &format!("{host}/repos/P4suta/gleam-mutants/releases"),
+                        &format!("{host}/repos/P4suta/smolmut/releases"),
                     ]);
                     isolate(&mut command, &directory);
                     mutate_command(&mut command, &notes)
@@ -155,7 +155,7 @@ fn native_creation_keeps_response_identity_without_another_lookup() {
     assert!(
         request
             .headers
-            .starts_with("POST /repos/P4suta/gleam-mutants/releases HTTP/1.1\r\n")
+            .starts_with("POST /repos/P4suta/smolmut/releases HTTP/1.1\r\n")
     );
     assert_eq!(
         serde_json::from_slice::<Value>(&request.body).unwrap(),
@@ -196,7 +196,7 @@ fn native_upload_preserves_the_release_id_binary_bytes_and_query_name() {
         },
     );
     result.unwrap();
-    assert!(request.headers.starts_with(&format!("POST /repos/P4suta/gleam-mutants/releases/{RELEASE_ID}/assets?name=package%2Bfixture.bin HTTP/1.1\r\n")));
+    assert!(request.headers.starts_with(&format!("POST /repos/P4suta/smolmut/releases/{RELEASE_ID}/assets?name=package%2Bfixture.bin HTTP/1.1\r\n")));
     assert!(
         request
             .headers
@@ -230,7 +230,7 @@ fn native_mutation_refuses_a_denial_or_an_invalid_success_response() {
                 "api",
                 "--method",
                 "POST",
-                &format!("{host}/repos/P4suta/gleam-mutants/releases"),
+                &format!("{host}/repos/P4suta/smolmut/releases"),
             ]);
             isolate(&mut command, &directory);
             mutate_command(&mut command, &serde_json::json!({"draft":true}))
