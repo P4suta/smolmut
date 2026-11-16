@@ -46,7 +46,7 @@ body:
     attributes:
       label: Environment
       description: Include OS, architecture, Gleam, runtime, and OTP versions.
-      placeholder: Windows 11 x64; Gleam 1.18.1; OTP 29.0.5
+      placeholder: Windows 11 x64; Gleam 1.19.2; OTP 29.0.5
     validations:
       required: true
   - type: textarea

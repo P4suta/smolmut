@@ -12,14 +12,16 @@ import gleam_mutants/types
 import simplifile
 import tomlet
 
-const project_config = "name = \"local_dependency_consumer\"\nversion = \"0.0.0\"\n"
+const project_config =
+  "name = \"local_dependency_consumer\"\nversion = \"0.0.0\"\n"
   <> "[dependencies]\narithmetic_fixture = { path = \"../arithmetic\" }\n"
   <> "[dev_dependencies]\nassertion_fixture = { path = \"../assertion\" }\n"
   <> "[tools.gleam_mutants]\nversion = 1\n"
   <> "[tools.gleam_mutants.test]\ntarget = \"erlang\"\nruntime = \"erlang\"\n"
   <> "[tools.gleam_mutants.cache]\nmode = \"read-write\"\n"
 
-const source = "import arithmetic_fixture\n"
+const source =
+  "import arithmetic_fixture\n"
   <> "pub fn add_one(value: Int) -> Int { arithmetic_fixture.identity(value) + 1 }\n"
 
 pub fn main() {

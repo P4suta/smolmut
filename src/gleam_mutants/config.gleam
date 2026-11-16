@@ -15,7 +15,8 @@ import gleam_mutants/types.{TestSelectionAuto, TestSelectionFull}
 import tomlet
 
 /// The characters a bare TOML key is written with.
-const key_characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
+const key_characters =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
 
 pub type Target {
   AutoTarget
@@ -996,10 +997,8 @@ fn locate_lines(
 /// The column `key` stands on its own at in `line`, or nothing.
 ///
 /// A key that only appears inside a longer name is not the key being reported:
-/// `timeout_ms` is written inside `call_timeout_ms`, and pointing an error at
-/// the wrong section is worse than pointing at nothing. `consumed` counts the
-/// characters already cut from the front of the line, so the column stays the
-/// one in the whole line.
+/// `timeout_ms` is written inside `call_timeout_ms`, and pointing an error at the wrong section is worse than pointing at nothing.
+/// `consumed` counts the characters already cut from the front of the line, so the column stays the one in the whole line.
 fn key_column(line: String, key: String, consumed: Int) -> Result(Int, Nil) {
   case string.split_once(line, key) {
     Error(Nil) -> Error(Nil)

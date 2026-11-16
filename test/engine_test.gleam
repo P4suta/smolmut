@@ -9,7 +9,8 @@ import gleam_mutants/platform
 import gleam_mutants/types
 import simplifile
 
-const calc_source = "pub fn add(a: Int, b: Int) -> Int {\n  a + b\n}\n\n"
+const calc_source =
+  "pub fn add(a: Int, b: Int) -> Int {\n  a + b\n}\n\n"
   <> "pub fn scaled(a: Int, b: Int) -> Int {\n  add(a, b) + b\n}\n"
 
 const inert_source = "pub fn identity(value: Int) -> Int {\n  value\n}\n"
@@ -62,8 +63,7 @@ pub fn instrument_wraps_selected_mutants_and_leaves_other_files_alone_test() {
   let assert Ok(untouched) = simplifile.read(path.join(root, "src/inert.gleam"))
 
   assert first_meaningful_line(instrumented) == "import rt_mod"
-  // Every mutant is wrapped, and which guard it gets says whether the walk
-  // with nothing mutated may also answer what the replacement would have said.
+  // Every mutant is wrapped, and which guard it gets says whether the walk with nothing mutated may also answer what the replacement would have said.
   assert list.all(mutants, fn(mutant) {
     string.contains(instrumented, "rt_mod.select(\"" <> mutant.id)
     || string.contains(instrumented, "rt_mod.compare(\"" <> mutant.id)
