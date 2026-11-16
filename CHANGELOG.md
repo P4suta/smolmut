@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0](https://github.com/P4suta/smolmut/compare/v0.1.0...v0.2.0) (2026-11-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename the package to smolmut ([#91](https://github.com/P4suta/smolmut/issues/91))
+
+### Bug Fixes
+
+* **release:** check npm provenance before publication ([#84](https://github.com/P4suta/smolmut/issues/84)) ([65c58f6](https://github.com/P4suta/smolmut/commit/65c58f64e9a5d7aeae0e2f5ad54eadd689eb6f2a))
+* **release:** keep confirmed draft identities ([#82](https://github.com/P4suta/smolmut/issues/82)) ([2843822](https://github.com/P4suta/smolmut/commit/284382218daff19e12ad2f2a54c36c5edb9fcd3c))
+* **release:** wait for npm publication availability ([#86](https://github.com/P4suta/smolmut/issues/86)) ([7501fcd](https://github.com/P4suta/smolmut/commit/7501fcd061b023cf290dfd6ccf3c5f818e64d01f))
+
+
+### Code Refactoring
+
+* rename the package to smolmut ([#91](https://github.com/P4suta/smolmut/issues/91)) ([61b2652](https://github.com/P4suta/smolmut/commit/61b2652bba6e077e403ea77abfb5695c2522bf13))
+
 ## 0.1.0 (2026-10-29)
 
 ### ⚠ BREAKING CHANGES
