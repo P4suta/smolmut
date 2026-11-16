@@ -1,24 +1,20 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
 import gleam/list
-import gleam_mutants/core/path
-import gleam_mutants/platform
 import simplifile
+import smolmut/core/path
+import smolmut/platform
 
 /// A batch runs its jobs at once, and never more of them than it was asked.
 ///
-/// Both halves are answered by what the children do rather than by how long
-/// the batch took. A child announces itself and then waits for a given number
-/// of its siblings to announce themselves too, so it can only finish if that
-/// many of them were running beside it. A clock would answer neither: two
-/// processes racing a third on a loaded machine can take longer than three in
-/// a row, and a test about this batch would be failing about the machine.
+/// Both halves are answered by what the children do rather than by how long the batch took.
+/// A child announces itself and then waits for a given number of its siblings to announce themselves too, so it can only finish if that many of them were running beside it.
+/// A clock would answer neither: two processes racing a third on a loaded machine can take longer than three in a row, and a test about this batch would be failing about the machine.
 pub fn process_batch_honours_job_parallelism_test() {
   let meeting = fresh_directory()
-  // Four children, two at a time, each waiting for one sibling: every one of
-  // them finds it, because two are always running together.
+  // Four children, two at a time, each waiting for one sibling: every one of them finds it, because two are always running together.
   assert list.all(
     platform.run_process_batch(meeting_requests(meeting, 4, 2), 2),
     finished,
@@ -33,8 +29,7 @@ pub fn process_batch_honours_job_parallelism_test() {
   )
 
   let together = fresh_directory()
-  // And four at a time, so that the wait above is a cap being enforced rather
-  // than a number nothing could ever reach.
+  // And four at a time, so that the wait above is a cap being enforced rather than a number nothing could ever reach.
   assert list.all(
     platform.run_process_batch(meeting_requests(together, 4, 4), 4),
     finished,
@@ -54,7 +49,7 @@ fn fresh_directory() -> String {
   let directory =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-batch-" <> platform.random_nonce(),
+      "smolmut-batch-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(directory)
   directory
@@ -74,14 +69,11 @@ fn meeting_requests(
 /// A child that says it is here, then waits for `wanted` of them to be here.
 ///
 /// "Here" means running, not "has run": the marker goes when the child does,
-/// so what a child counts is how many are beside it rather than how many came
-/// before it. The first to reach its number says so where the others can see
-/// it, which is what keeps one of them leaving from taking the answer away
-/// from the rest.
+/// so what a child counts is how many are beside it rather than how many came before it.
+/// The first to reach its number says so where the others can see it, which is what keeps one of them leaving from taking the answer away from the rest.
 ///
 /// The wait is bounded so that a child which is alone ends rather than hangs,
-/// and the batch's own timeout is longer than that so the ending is the
-/// child's answer rather than the batch giving up on it.
+/// and the batch's own timeout is longer than that so the ending is the child's answer rather than the batch giving up on it.
 fn meeting_request(
   directory: String,
   index: Int,

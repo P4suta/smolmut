@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::{
@@ -12,7 +12,7 @@ fn stale_compiled_configuration_cannot_derive_or_certify_current_sources()
 -> Result<(), Box<dyn std::error::Error>> {
     let nonce = SystemTime::now().duration_since(UNIX_EPOCH)?.as_nanos();
     let root = std::env::temp_dir().join(format!(
-        "gleam-mutants-stale-verifier-{}-{nonce}",
+        "smolmut-stale-verifier-{}-{nonce}",
         std::process::id()
     ));
     fs::create_dir_all(root.join("verification/src"))?;
@@ -20,7 +20,7 @@ fn stale_compiled_configuration_cannot_derive_or_certify_current_sources()
         root.join("verification/src/main.rs"),
         "// changed after compilation\n",
     )?;
-    let result = Command::new(env!("CARGO_BIN_EXE_gleam-mutants-verification"))
+    let result = Command::new(env!("CARGO_BIN_EXE_smolmut-verification"))
         .args(["derive", "output"])
         .current_dir(&root)
         .output();

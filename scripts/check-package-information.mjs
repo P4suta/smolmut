@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -8,7 +8,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const temporary = fs.mkdtempSync(
-	path.join(os.tmpdir(), "gleam-mutants-package-information-"),
+	path.join(os.tmpdir(), "smolmut-package-information-"),
 );
 const output = path.join(temporary, "package-information.json");
 
@@ -33,26 +33,26 @@ try {
 	assertEqual(
 		metadata.internal_modules,
 		[
-			"gleam_mutants/cache",
-			"gleam_mutants/capability",
-			"gleam_mutants/cli",
-			"gleam_mutants/config",
-			"gleam_mutants/core/*",
-			"gleam_mutants/engine",
-			"gleam_mutants/error",
-			"gleam_mutants/local_dependencies",
-			"gleam_mutants/mte_asset",
-			"gleam_mutants/pipeline",
-			"gleam_mutants/platform",
-			"gleam_mutants/project_report",
-			"gleam_mutants/report",
-			"gleam_mutants/runtime",
-			"gleam_mutants/snapshot",
-			"gleam_mutants/stryker_html",
-			"gleam_mutants/stryker_report",
-			"gleam_mutants/test_impact",
-			"gleam_mutants/version",
-			"gleam_mutants/workspace_lock",
+			"smolmut/cache",
+			"smolmut/capability",
+			"smolmut/cli",
+			"smolmut/config",
+			"smolmut/core/*",
+			"smolmut/engine",
+			"smolmut/error",
+			"smolmut/local_dependencies",
+			"smolmut/mte_asset",
+			"smolmut/pipeline",
+			"smolmut/platform",
+			"smolmut/project_report",
+			"smolmut/report",
+			"smolmut/runtime",
+			"smolmut/snapshot",
+			"smolmut/stryker_html",
+			"smolmut/stryker_report",
+			"smolmut/test_impact",
+			"smolmut/version",
+			"smolmut/workspace_lock",
 		],
 		"internal modules",
 	);

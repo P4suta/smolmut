@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
@@ -7,15 +7,15 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/order
 import gleam/string
-import gleam_mutants/core/exit_policy
-import gleam_mutants/core/glob
-import gleam_mutants/core/operator
-import gleam_mutants/core/outcome
-import gleam_mutants/core/path
-import gleam_mutants/core/plan
-import gleam_mutants/core/score
-import gleam_mutants/core/span
-import gleam_mutants/types
+import smolmut/core/exit_policy
+import smolmut/core/glob
+import smolmut/core/operator
+import smolmut/core/outcome
+import smolmut/core/path
+import smolmut/core/plan
+import smolmut/core/score
+import smolmut/core/span
+import smolmut/types
 
 fn number(value: Int) -> String {
   int.to_string(value)

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use serde::{Deserialize, Serialize};
@@ -8,7 +8,8 @@ use std::fs;
 use std::io::Read;
 use std::path::{Component, Path};
 
-pub const REPOSITORY: &str = "P4suta/gleam-mutants";
+pub const REPOSITORY: &str = "P4suta/smolmut";
+pub const PACKAGE: &str = "smolmut";
 pub const REPOSITORY_ID: u64 = 1337180332;
 pub const OWNER_ID: u64 = 42543015;
 pub const CANDIDATE_WORKFLOW: &str = ".github/workflows/release-candidate.yml";
@@ -196,14 +197,20 @@ pub fn artifact(directory: &Path, name: &str) -> Result<Artifact, String> {
     })
 }
 
+pub fn admitted_package(name: &str) -> Result<&str, String> {
+    smolmut_release_core::admit_package_name(name)
+        .map(|()| name)
+        .map_err(|refusal| format!("{name}: {}", refusal.message()))
+}
+
 pub fn inventory(version: &Version) -> Vec<String> {
     let v = version.as_str();
     let mut names = vec![
-        format!("hex/gleam_mutants-{v}.tar"),
-        "escript/gleam-mutants.escript".into(),
-        format!("npm/gleam-mutants-{v}.tgz"),
+        format!("hex/{PACKAGE}-{v}.tar"),
+        format!("escript/{PACKAGE}.escript"),
+        format!("npm/{PACKAGE}-{v}.tgz"),
     ];
-    names.extend(DISTRIBUTIONS.map(|d| format!("gleam-mutants-{v}-{d}.cdx.json")));
+    names.extend(DISTRIBUTIONS.map(|d| format!("{PACKAGE}-{v}-{d}.cdx.json")));
     names.sort();
     names
 }
@@ -242,6 +249,7 @@ fn checked_distribution(
     version: &Version,
     expected: Vec<String>,
 ) -> Result<Vec<Artifact>, String> {
+    admitted_package(PACKAGE)?;
     let rows = String::from_utf8(read(directory, "SHA256SUMS")?).map_err(|e| e.to_string())?;
     let mut expected = expected;
     expected.sort();
@@ -272,7 +280,7 @@ fn checked_distribution(
         artifacts.push(item);
     }
     for distribution in DISTRIBUTIONS {
-        let name = format!("gleam-mutants-{}-{distribution}.cdx.json", version.as_str());
+        let name = format!("{PACKAGE}-{}-{distribution}.cdx.json", version.as_str());
         let sbom: serde_json::Value =
             serde_json::from_slice(&read(directory, &name)?).map_err(|e| e.to_string())?;
         let component = &sbom["metadata"]["component"];
@@ -280,7 +288,7 @@ fn checked_distribution(
             .as_str()
             .ok_or("SBOM application reference is missing")?;
         if sbom["bomFormat"] != "CycloneDX"
-            || component["name"] != "gleam-mutants"
+            || component["name"] != PACKAGE
             || component["version"] != version.as_str()
         {
             return Err(format!("SBOM product identity mismatch: {name}"));
@@ -330,24 +338,23 @@ mod tests {
                 fs::create_dir(root.join(name)).unwrap();
             }
             for name in [
-                "hex/gleam_mutants-0.1.0.tar",
-                "escript/gleam-mutants.escript",
-                "npm/gleam-mutants-0.1.0.tgz",
+                "hex/smolmut-0.1.0.tar",
+                "escript/smolmut.escript",
+                "npm/smolmut-0.1.0.tgz",
             ] {
                 fs::write(root.join(name), b"verified fixture archive").unwrap();
             }
             for distribution in ["hex", "escript", "npm"] {
-                let component =
-                    format!("pkg:generic/gleam-mutants@0.1.0?distribution={distribution}");
+                let component = format!("pkg:generic/smolmut@0.1.0?distribution={distribution}");
                 let sbom = serde_json::json!({
                     "bomFormat": "CycloneDX",
                     "specVersion": "1.6",
-                    "metadata": {"component": {"name": "gleam-mutants", "version": VERSION, "bom-ref": component}},
+                    "metadata": {"component": {"name": "smolmut", "version": VERSION, "bom-ref": component}},
                     "components": [{"bom-ref": "pkg:npm/mutation-testing-elements@3.9.0", "name": "mutation-testing-elements", "version": "3.9.0"}],
                     "dependencies": [{"ref": component, "dependsOn": ["pkg:npm/mutation-testing-elements@3.9.0"]}]
                 });
                 fs::write(
-                    root.join(format!("gleam-mutants-0.1.0-{distribution}.cdx.json")),
+                    root.join(format!("smolmut-0.1.0-{distribution}.cdx.json")),
                     serde_json::to_vec(&sbom).unwrap(),
                 )
                 .unwrap();
@@ -359,12 +366,12 @@ mod tests {
 
         fn checksums(&self) {
             let names = [
-                "hex/gleam_mutants-0.1.0.tar",
-                "escript/gleam-mutants.escript",
-                "npm/gleam-mutants-0.1.0.tgz",
-                "gleam-mutants-0.1.0-hex.cdx.json",
-                "gleam-mutants-0.1.0-escript.cdx.json",
-                "gleam-mutants-0.1.0-npm.cdx.json",
+                "hex/smolmut-0.1.0.tar",
+                "escript/smolmut.escript",
+                "npm/smolmut-0.1.0.tgz",
+                "smolmut-0.1.0-hex.cdx.json",
+                "smolmut-0.1.0-escript.cdx.json",
+                "smolmut-0.1.0-npm.cdx.json",
             ];
             let rows = names
                 .map(|name| {
@@ -388,10 +395,29 @@ mod tests {
     }
 
     #[test]
+    fn gleam_toml_declares_the_admitted_release_package() {
+        let manifest =
+            fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../gleam.toml"))
+                .unwrap();
+        let declared = manifest
+            .lines()
+            .find_map(|line| line.strip_prefix("name = \"")?.strip_suffix('"'));
+        assert_eq!(declared, Some(super::PACKAGE));
+        assert_eq!(super::admitted_package(super::PACKAGE), Ok(super::PACKAGE));
+    }
+
+    #[test]
+    fn a_reserved_or_malformed_package_name_cannot_reach_a_registry() {
+        for name in ["gleam_mutants", "smol-mut"] {
+            assert!(super::admitted_package(name).is_err(), "{name}");
+        }
+    }
+
+    #[test]
     fn accepts_the_complete_distribution_and_refuses_changed_bytes() {
         let fixture = Fixture::new();
         assert_eq!(inspect(&fixture.0, VERSION), Ok(()));
-        fs::write(fixture.0.join("npm/gleam-mutants-0.1.0.tgz"), b"changed").unwrap();
+        fs::write(fixture.0.join("npm/smolmut-0.1.0.tgz"), b"changed").unwrap();
         assert!(inspect(&fixture.0, VERSION).is_err());
     }
 
@@ -400,23 +426,19 @@ mod tests {
         let fixture = Fixture::new();
         let file = fixture.0.join("SHA256SUMS");
         let rows = fs::read_to_string(&file).unwrap();
-        fs::write(
-            &file,
-            rows.replace("npm/gleam-mutants-0.1.0.tgz", "../outside"),
-        )
-        .unwrap();
+        fs::write(&file, rows.replace("npm/smolmut-0.1.0.tgz", "../outside")).unwrap();
         assert!(inspect(&fixture.0, VERSION).is_err());
         fs::write(&file, format!("{rows}{rows}")).unwrap();
         assert!(inspect(&fixture.0, VERSION).is_err());
         fs::write(&file, &rows).unwrap();
-        fs::remove_file(fixture.0.join("escript/gleam-mutants.escript")).unwrap();
+        fs::remove_file(fixture.0.join("escript/smolmut.escript")).unwrap();
         assert!(inspect(&fixture.0, VERSION).is_err());
     }
 
     #[test]
     fn refuses_a_rehashed_sbom_for_another_version() {
         let fixture = Fixture::new();
-        let path = fixture.0.join("gleam-mutants-0.1.0-npm.cdx.json");
+        let path = fixture.0.join("smolmut-0.1.0-npm.cdx.json");
         let data = fs::read_to_string(&path).unwrap().replace("0.1.0", "0.2.0");
         fs::write(path, data).unwrap();
         fixture.checksums();
@@ -512,7 +534,7 @@ mod tests {
     #[test]
     fn refuses_links_even_when_their_bytes_match() {
         let fixture = Fixture::new();
-        let file = fixture.0.join("escript/gleam-mutants.escript");
+        let file = fixture.0.join("escript/smolmut.escript");
         let other = fixture.0.join("escript/original");
         fs::rename(&file, &other).unwrap();
         std::os::unix::fs::symlink(&other, &file).unwrap();

@@ -1,15 +1,15 @@
 {
-  "name": "gleam-mutants-development",
+  "name": "smolmut-development",
   "private": true,
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/P4suta/gleam-mutants.git"
+    "url": "git+https://github.com/P4suta/smolmut.git"
   },
   "bugs": {
-    "url": "https://github.com/P4suta/gleam-mutants/issues"
+    "url": "https://github.com/P4suta/smolmut/issues"
   },
-  "homepage": "https://github.com/P4suta/gleam-mutants#readme",
+  "homepage": "https://github.com/P4suta/smolmut#readme",
   "scripts": {
     "vendor:mte": "node scripts/vendor-mte.mjs",
     "test:report-schema": "node scripts/check-schema.mjs",

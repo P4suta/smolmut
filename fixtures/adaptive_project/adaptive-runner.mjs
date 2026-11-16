@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import fs from "node:fs";
 import path from "node:path";
 
-const active = process.env.GLEAM_MUTANTS_ACTIVE ?? "";
-const impactFile = process.env.GLEAM_MUTANTS_TEST_IMPACT_FILE ?? "";
-const selectionFile = process.env.GLEAM_MUTANTS_TEST_SELECTION_FILE ?? "";
-const runtime = process.env.GLEAM_MUTANTS_RUNTIME ?? "erlang";
+const active = process.env.SMOLMUT_ACTIVE ?? "";
+const impactFile = process.env.SMOLMUT_TEST_IMPACT_FILE ?? "";
+const selectionFile = process.env.SMOLMUT_TEST_SELECTION_FILE ?? "";
+const runtime = process.env.SMOLMUT_RUNTIME ?? "erlang";
 const forcedFull = process.argv.includes("full");
 const counterIndex = process.argv.indexOf("counter");
 const source = fs.readFileSync("src/classifier.gleam", "utf8");

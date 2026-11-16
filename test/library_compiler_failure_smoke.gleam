@@ -1,16 +1,16 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/io
 import gleam/option.{Some}
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/platform
-import gleam_mutants/types
 import simplifile
+import smolmut/api
+import smolmut/platform
+import smolmut/types
 
 pub fn main() {
-  let counter = platform.env("GLEAM_MUTANTS_COMPILER_COUNTER")
+  let counter = platform.env("SMOLMUT_COMPILER_COUNTER")
   let options =
     types.Options(
       ..api.default_options(),

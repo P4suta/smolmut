@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import { expect, test } from "@playwright/test";
@@ -32,13 +32,12 @@ test("offline report renders score, source, and survivor drawer safely", async (
   const node = fixture("javascript");
   expect(node).toBe(erlang);
 
-  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "gleam-mutants-html-"));
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "smolmut-html-"));
   const reportPath = path.join(temporary, "mutation.html");
   fs.writeFileSync(reportPath, erlang, "utf8");
   const reportUrl = pathToFileURL(reportPath).href;
   // WebKit cannot combine file: navigation with an offline context on Windows.
-  // Block every network transport explicitly; the request assertion below also
-  // fails if the report attempts any external access.
+  // Block every network transport explicitly; the request assertion below also fails if the report attempts any external access.
   const context = await browser.newContext({ offline: browserName !== "webkit" });
   if (browserName === "webkit") {
     await context.route(/^https?:/u, route => route.abort("internetdisconnected"));
@@ -51,10 +50,10 @@ test("offline report renders score, source, and survivor drawer safely", async (
   });
   page.on("pageerror", error => pageErrors.push(String(error)));
   await page.addInitScript(() => {
-    globalThis.__gleamMutantsSentinel = false;
-    globalThis.__gleamMutantsCspViolations = [];
+    globalThis.__smolmutSentinel = false;
+    globalThis.__smolmutCspViolations = [];
     addEventListener("securitypolicyviolation", event => {
-      globalThis.__gleamMutantsCspViolations.push(`${event.violatedDirective}:${event.blockedURI}`);
+      globalThis.__smolmutCspViolations.push(`${event.violatedDirective}:${event.blockedURI}`);
     });
   });
 
@@ -76,8 +75,8 @@ test("offline report renders score, source, and survivor drawer safely", async (
     await survived.click();
     await expect(page.locator("body")).toContainText("False");
 
-    expect(await page.evaluate(() => globalThis.__gleamMutantsSentinel)).toBe(false);
-    expect(await page.evaluate(() => globalThis.__gleamMutantsCspViolations)).toEqual([]);
+    expect(await page.evaluate(() => globalThis.__smolmutSentinel)).toBe(false);
+    expect(await page.evaluate(() => globalThis.__smolmutCspViolations)).toEqual([]);
     expect(externalRequests).toEqual([]);
     expect(pageErrors).toEqual([]);
   } finally {

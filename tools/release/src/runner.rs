@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::candidate::{self, Revision, Version};
@@ -239,10 +239,7 @@ pub fn github_outputs(candidate: &Candidate) -> Result<(), String> {
         ("version", candidate.identity.version.as_str().into()),
         (
             "npm-subject",
-            format!(
-                "pkg:npm/gleam-mutants@{}",
-                candidate.identity.version.as_str()
-            ),
+            format!("pkg:npm/smolmut@{}", candidate.identity.version.as_str()),
         ),
         ("npm-sha512", format!("sha512:{}", npm.sha512)),
     ];

@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -23,5 +23,6 @@ Its supported product is a mutation-testing library and CLI.
 - [Draft verification before registry publication](adr/verify-drafts-before-registry-publication.md)
 - [Source-derived pure core contracts](adr/derive-pure-core-contracts-from-source.md)
 - [Lexical path root preservation](adr/preserve-lexical-path-roots.md)
+- [Package name decision](adr/name-the-package-smolmut.md)
 
 See the [third-party notices](../THIRD_PARTY_NOTICES.md) for embedded dependencies.

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -18,7 +18,7 @@ const cacheRoot = process.platform === "win32"
   : process.platform === "darwin"
     ? path.join(os.homedir(), "Library", "Caches")
     : process.env.XDG_CACHE_HOME || path.join(os.homedir(), ".cache");
-const lockPath = path.join(cacheRoot, "gleam-mutants", "v1", "workspaces", workspaceId, "run.lock");
+const lockPath = path.join(cacheRoot, "smolmut", "v1", "workspaces", workspaceId, "run.lock");
 const command = mode => ["run", "-m", "workspace_lock_smoke", "--target", "erlang", "--", mode, workspace];
 
 const holder = childProcess.spawn("gleam", command("hold"), {

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -12,7 +12,7 @@ if (process.platform === "win32") {
 }
 
 const root = process.cwd();
-const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "gleam-mutants-interrupt-"));
+const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "smolmut-interrupt-"));
 const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 async function waitFor(predicate, timeoutMs) {
@@ -69,9 +69,7 @@ try {
         throw new Error(`${runtime} returned ${JSON.stringify(exit)}`);
       }
       if (runtime === "erlang") {
-        // BEAM can exit before the detached port group is reaped on hosted
-        // macOS/Linux runners; signal the recorded descendants directly
-        // before their delayed marker fires so the fixture cannot leak.
+        // BEAM can exit before the detached port group is reaped on hosted macOS/Linux runners; signal the recorded descendants directly before their delayed marker fires so the fixture cannot leak.
         signalPids(erlangDescendants.reverse(), "SIGTERM");
         await delay(250);
         signalPids(erlangDescendants, "SIGKILL");

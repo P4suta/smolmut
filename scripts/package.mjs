@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -84,10 +84,8 @@ function run(name, args, cwd = root, options = {}) {
 
 /// Whether a smoke failed because Hex would not answer, and nothing else.
 ///
-/// `deps-download.mjs` has a broader predicate, and it must not be reused
-/// here: it treats the word "timeout" as transient, and every mutation run
-/// prints `timed out 0` in its own summary, so any failing smoke would look
-/// retryable. These two phrases are Gleam's, and a mutant cannot produce them.
+/// `deps-download.mjs` has a broader predicate, and it must not be reused here: it treats the word "timeout" as transient, and every mutation run prints `timed out 0` in its own summary, so any failing smoke would look retryable.
+/// These two phrases are Gleam's, and a mutant cannot produce them.
 function hexRefused(output) {
 	const text = output.toLowerCase();
 	return (
@@ -98,12 +96,10 @@ function hexRefused(output) {
 
 /// A smoke's own mutation run, repeated past a Hex API that is refusing.
 ///
-/// A project that depends on an artifact by path is resolved again inside the
-/// snapshot every run: a path dependency carries no checksum, so Gleam has to
-/// ask Hex about the rest of the closure to confirm it. That is one API call
-/// per smoke that no lockfile can remove, and Hex rate-limits by address, so a
-/// hosted runner shares the refusal with everyone else on that host. Waiting
-/// answers it. A smoke that fails for any other reason fails here and now.
+/// A project that depends on an artifact by path is resolved again inside the snapshot every run: a path dependency carries no checksum, so Gleam has to ask Hex about the rest of the closure to confirm it.
+/// That is one API call per smoke that no lockfile can remove, and Hex rate-limits by address, so a hosted runner shares the refusal with everyone else on that host.
+/// Waiting answers it.
+/// A smoke that fails for any other reason fails here and now.
 function smokeRun(name, args, cwd) {
 	for (let attempt = 1; attempt <= smokeAttempts; attempt += 1) {
 		const [program, programArguments] = command(name, args);
@@ -145,9 +141,9 @@ function copyProject(destination) {
 		".git",
 		"build",
 		"dist",
-		".gleam_mutants",
+		".smolmut",
 		"node_modules",
-		"gleam_mutants",
+		"smolmut",
 		"reports",
 		"test-results",
 		"playwright-report",
@@ -324,10 +320,7 @@ function extractHexSource(artifact, destination) {
 
 /// Locks `names` to the versions this repository's own manifest resolved.
 ///
-/// Reading them rather than writing them down is what keeps a dependency bump
-/// from leaving a stale checksum here for a packaging run to fail on: a
-/// manifest whose requirements no longer match its project is re-resolved, and
-/// one whose checksums are wrong is an error.
+/// Reading them rather than writing them down is what keeps a dependency bump from leaving a stale checksum here for a packaging run to fail on: a manifest whose requirements no longer match its project is re-resolved, and one whose checksums are wrong is an error.
 function writeLockfile(directory, required) {
 	const manifest = fs
 		.readFileSync(path.join(root, "manifest.toml"), "utf8")
@@ -363,16 +356,16 @@ ${dependency}
 [dev_dependencies]
 gleeunit = ">= 1.9.0 and < 2.0.0"
 
-[tools.gleam_mutants]
+[tools.smolmut]
 version = 1
 
-[tools.gleam_mutants.mutation]
+[tools.smolmut.mutation]
 include = ["src/calculator.gleam"]
 
-[tools.gleam_mutants.cache]
+[tools.smolmut.cache]
 mode = "off"
 
-[tools.gleam_mutants.report]
+[tools.smolmut.report]
 directory = "reports/mutation"
 high = 80
 low = 60
@@ -409,8 +402,8 @@ function addMutationConsumerContract(directory) {
 	write(
 		path.join(directory, "test", "mutation_api_test.gleam"),
 		`import gleam/list
-import gleam_mutants/api
-import gleam_mutants/types
+import smolmut/api
+import smolmut/types
 
 pub fn packaged_api_test() {
   let options = api.default_options()
@@ -447,18 +440,18 @@ function verifyReports(project, label) {
 
 function smokeHexArtifact(artifact, temporaryRoot) {
 	const consumer = path.join(temporaryRoot, "hex-smoke");
-	const dependency = path.join(consumer, "vendor", "gleam_mutants");
+	const dependency = path.join(consumer, "vendor", "smolmut");
 	extractHexSource(artifact, dependency);
 	for (const required of [
-		"priv/gleam_mutants/LICENSE-MIT",
-		"priv/gleam_mutants/LICENSE-APACHE",
-		"priv/gleam_mutants/THIRD_PARTY_NOTICES.md",
-		"priv/gleam_mutants/schema/run-report-v1.schema.json",
-		"priv/gleam_mutants/schema/list-v1.schema.json",
-		"priv/gleam_mutants/schema/doctor-v1.schema.json",
-		"priv/gleam_mutants/schema/mutation-testing-report-schema-3.9.0.json",
-		"priv/gleam_mutants/vendor/mutation-testing-elements/3.9.0/LICENSE",
-		"priv/gleam_mutants/vendor/mutation-testing-elements/3.9.0/PROVENANCE.json",
+		"priv/smolmut/LICENSE-MIT",
+		"priv/smolmut/LICENSE-APACHE",
+		"priv/smolmut/THIRD_PARTY_NOTICES.md",
+		"priv/smolmut/schema/run-report-v1.schema.json",
+		"priv/smolmut/schema/list-v1.schema.json",
+		"priv/smolmut/schema/doctor-v1.schema.json",
+		"priv/smolmut/schema/mutation-testing-report-schema-3.9.0.json",
+		"priv/smolmut/vendor/mutation-testing-elements/3.9.0/LICENSE",
+		"priv/smolmut/vendor/mutation-testing-elements/3.9.0/PROVENANCE.json",
 	]) {
 		if (!fs.existsSync(path.join(dependency, required))) {
 			throw new Error(
@@ -468,7 +461,7 @@ function smokeHexArtifact(artifact, temporaryRoot) {
 	}
 	makeMutationProject(
 		consumer,
-		'gleam_mutants = { path = "vendor/gleam_mutants" }\n',
+		'smolmut = { path = "vendor/smolmut" }\n',
 	);
 	addMutationConsumerContract(consumer);
 	download(consumer, fixedEnvironment);
@@ -492,8 +485,8 @@ function smokeHexArtifact(artifact, temporaryRoot) {
 	}
 	for (const removed of [
 		"src/smartest.gleam",
-		"src/gleam_mutants/pbt.gleam",
-		"src/gleam_mutants/suggest",
+		"src/smolmut/pbt.gleam",
+		"src/smolmut/suggest",
 		"editors/vscode",
 	]) {
 		if (fs.existsSync(path.join(dependency, removed))) {
@@ -502,15 +495,15 @@ function smokeHexArtifact(artifact, temporaryRoot) {
 	}
 	const output = run(
 		"gleam",
-		["run", "-m", "gleam_mutants", "--", "--version"],
+		["run", "-m", "smolmut", "--", "--version"],
 		consumer,
 		{ capture: true },
 	);
-	if (!output.includes(`gleam-mutants ${version}`))
+	if (!output.includes(`smolmut ${version}`))
 		throw new Error(`Unexpected direct dependency CLI version: ${output}`);
 	smokeRun(
 		"gleam",
-		["run", "-m", "gleam_mutants", "--", "run", "--no-strict", "--jobs", "2"],
+		["run", "-m", "smolmut", "--", "run", "--no-strict", "--jobs", "2"],
 		consumer,
 	);
 	return verifyReports(consumer, "Hex");
@@ -524,7 +517,7 @@ function buildHex(temporaryRoot) {
 		process.platform === "win32" ? `\\\\?\\${project}` : project;
 	run("gleam", ["export", "hex-tarball"], exportDirectory);
 	const artifact = findFile(project, (file) =>
-		file.endsWith(`gleam_mutants-${version}.tar`),
+		file.endsWith(`smolmut-${version}.tar`),
 	);
 	if (!artifact) throw new Error("Gleam did not produce the Hex tarball");
 	const target = path.join(dist, "hex", path.basename(artifact));
@@ -537,8 +530,8 @@ function buildHex(temporaryRoot) {
 
 function buildEscript(temporaryRoot) {
 	run("gleam", ["export", "escript"]);
-	const generated = path.join(root, "gleam_mutants");
-	const target = path.join(dist, "escript", "gleam-mutants.escript");
+	const generated = path.join(root, "smolmut");
+	const target = path.join(dist, "escript", "smolmut.escript");
 	fs.mkdirSync(path.dirname(target), { recursive: true });
 	fs.copyFileSync(generated, target);
 	if (process.platform !== "win32") fs.chmodSync(target, 0o755);
@@ -570,7 +563,7 @@ function buildNpm(temporaryRoot) {
 			// `gleam build` compiles this package's own `test/` modules into the same directory as its `src/` ones, so the published runtime is cut back to the modules that came from `src/` — the prelude re-export aside.
 			// Naming the test modules instead would publish every new one until somebody noticed it in the tarball.
 			if (
-				parts[0] === "gleam_mutants" &&
+				parts[0] === "smolmut" &&
 				parts.length === 2 &&
 				path.extname(source) === ".mjs"
 			) {
@@ -640,20 +633,20 @@ function buildNpm(temporaryRoot) {
 		),
 	);
 	write(
-		path.join(stage, "bin", "gleam-mutants.mjs"),
-		`#!/usr/bin/env node\nimport { main } from "../runtime/gleam_mutants/gleam_mutants.mjs";\nmain();\n`,
+		path.join(stage, "bin", "smolmut.mjs"),
+		`#!/usr/bin/env node\nimport { main } from "../runtime/smolmut/smolmut.mjs";\nmain();\n`,
 		0o755,
 	);
 	write(
 		path.join(stage, "package.json"),
 		`${JSON.stringify(
 			{
-				name: "gleam-mutants",
+				name: "smolmut",
 				version,
 				description:
 					"Mutation testing for Gleam across Erlang, Node, Deno, and Bun",
 				type: "module",
-				bin: { "gleam-mutants": "bin/gleam-mutants.mjs" },
+				bin: { "smolmut": "bin/smolmut.mjs" },
 				files: [
 					"bin",
 					"runtime",
@@ -668,10 +661,10 @@ function buildNpm(temporaryRoot) {
 				license: "MIT OR Apache-2.0",
 				repository: {
 					type: "git",
-					url: "git+https://github.com/P4suta/gleam-mutants.git",
+					url: "git+https://github.com/P4suta/smolmut.git",
 				},
-				bugs: { url: "https://github.com/P4suta/gleam-mutants/issues" },
-				homepage: "https://github.com/P4suta/gleam-mutants#readme",
+				bugs: { url: "https://github.com/P4suta/smolmut/issues" },
+				homepage: "https://github.com/P4suta/smolmut#readme",
 				publishConfig: { access: "public" },
 			},
 			null,
@@ -682,12 +675,12 @@ function buildNpm(temporaryRoot) {
 		path.join(stage, "package-lock.json"),
 		`${JSON.stringify(
 			{
-				name: "gleam-mutants",
+				name: "smolmut",
 				version,
 				lockfileVersion: 3,
 				requires: true,
 				packages: {
-					"": { name: "gleam-mutants", version, license: "MIT OR Apache-2.0" },
+					"": { name: "smolmut", version, license: "MIT OR Apache-2.0" },
 				},
 			},
 			null,
@@ -707,9 +700,9 @@ function buildNpm(temporaryRoot) {
 	const installed = path.join(
 		smoke,
 		"node_modules",
-		"gleam-mutants",
+		"smolmut",
 		"bin",
-		"gleam-mutants.mjs",
+		"smolmut.mjs",
 	);
 	const output = run(process.execPath, [installed, "--version"], smoke, {
 		capture: true,
@@ -736,7 +729,7 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 	run("syft", [
 		source,
 		"--source-name",
-		`gleam-mutants-${distribution}`,
+		`smolmut-${distribution}`,
 		"--source-version",
 		version,
 		"-o",
@@ -756,18 +749,18 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 		sbomData.components.push({
 			"bom-ref": applicationRef,
 			type: "application",
-			name: "gleam-mutants",
+			name: "smolmut",
 			version,
 			licenses: [{ expression: "MIT OR Apache-2.0" }],
-			properties: [{ name: "gleam-mutants:distribution", value: distribution }],
+			properties: [{ name: "smolmut:distribution", value: distribution }],
 		});
 	}
 	sbomData.metadata.component = {
 		"bom-ref": applicationRef,
 		type: "application",
-		name: "gleam-mutants",
+		name: "smolmut",
 		version,
-		properties: [{ name: "gleam-mutants:distribution", value: distribution }],
+		properties: [{ name: "smolmut:distribution", value: distribution }],
 	};
 	const mteRef = "pkg:npm/mutation-testing-elements@3.9.0";
 	if (
@@ -789,7 +782,7 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 			licenses: [{ license: { id: "Apache-2.0" } }],
 			properties: [
 				{
-					name: "gleam-mutants:npm-integrity",
+					name: "smolmut:npm-integrity",
 					value:
 						"sha512-3G4GhBO8Wc/ZrqOJ5uT8AbM1h/ew9kfX0MIlpy59gWu/amMZyKH3TreKAOMwwXNibhZMOL7A3n5nFvhYWLdtYQ==",
 				},
@@ -816,11 +809,11 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 			{
 				"bom-ref": applicationRef,
 				type: "application",
-				name: "gleam-mutants",
+				name: "smolmut",
 				version,
 				licenses: [{ expression: "MIT OR Apache-2.0" }],
 				properties: [
-					{ name: "gleam-mutants:distribution", value: distribution },
+					{ name: "smolmut:distribution", value: distribution },
 				],
 			},
 			{
@@ -839,7 +832,7 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 				licenses: [{ license: { id: "Apache-2.0" } }],
 				properties: [
 					{
-						name: "gleam-mutants:npm-integrity",
+						name: "smolmut:npm-integrity",
 						value:
 							"sha512-3G4GhBO8Wc/ZrqOJ5uT8AbM1h/ew9kfX0MIlpy59gWu/amMZyKH3TreKAOMwwXNibhZMOL7A3n5nFvhYWLdtYQ==",
 					},
@@ -876,7 +869,7 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 	const canonical = stable(sbomData);
 	const sbom = path.join(
 		dist,
-		`gleam-mutants-${version}-${distribution}.cdx.json`,
+		`smolmut-${version}-${distribution}.cdx.json`,
 	);
 	fs.writeFileSync(sbom, `${JSON.stringify(canonical)}\n`, "utf8");
 	return sbom;
@@ -885,7 +878,7 @@ function generateSbom(source, distribution, applicationRef, temporaryRoot) {
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 const temporaryRoot = fs.mkdtempSync(
-	path.join(os.tmpdir(), "gleam-mutants-package-"),
+	path.join(os.tmpdir(), "smolmut-package-"),
 );
 try {
 	run(process.execPath, ["scripts/check-vendor.mjs"]);
@@ -906,19 +899,19 @@ try {
 		generateSbom(
 			hexArtifact,
 			"hex",
-			`pkg:hex/gleam_mutants@${version}`,
+			`pkg:hex/smolmut@${version}`,
 			temporaryRoot,
 		),
 		generateSbom(
 			escriptArtifact,
 			"escript",
-			`pkg:generic/gleam-mutants@${version}?distribution=escript`,
+			`pkg:generic/smolmut@${version}?distribution=escript`,
 			temporaryRoot,
 		),
 		generateSbom(
 			`dir:${npmBuild.stage}`,
 			"npm",
-			`pkg:npm/gleam-mutants@${version}`,
+			`pkg:npm/smolmut@${version}`,
 			temporaryRoot,
 		),
 	];
@@ -936,7 +929,7 @@ try {
 	);
 } finally {
 	fs.rmSync(temporaryRoot, { recursive: true, force: true });
-	for (const generated of ["gleam_mutants", "gleam_mutants.cmd"]) {
+	for (const generated of ["smolmut", "smolmut.cmd"]) {
 		fs.rmSync(path.join(root, generated), { force: true });
 	}
 }

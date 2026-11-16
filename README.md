@@ -1,17 +1,17 @@
-# Gleam_mutants
+# Smolmut
 
 Mutation testing for Gleam through a library and CLI.
 
 ## Installation
 
 ```sh
-gleam add --dev gleam_mutants
+gleam add --dev smolmut
 ```
 
 ## Usage
 
 ```sh
-gleam run -m gleam_mutants -- run
+gleam run -m smolmut -- run
 ```
 
 ## Documentation

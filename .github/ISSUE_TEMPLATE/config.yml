@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 ---
@@ -6,6 +6,6 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/P4suta/gleam-mutants/security/advisories/new
+    url: https://github.com/P4suta/smolmut/security/advisories/new
     about: >-
       Report security issues privately; do not include them in a public issue.

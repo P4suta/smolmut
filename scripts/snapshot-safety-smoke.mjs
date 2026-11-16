@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -8,7 +8,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const temporary = fs.mkdtempSync(
-	path.join(os.tmpdir(), "gleam mutants snapshot "),
+	path.join(os.tmpdir(), "smolmut snapshot "),
 );
 const valid = path.join(temporary, "project with spaces");
 const rejected = path.join(temporary, "project with junction");
@@ -21,7 +21,7 @@ function makeProject(directory) {
 	fs.mkdirSync(path.join(directory, "node_modules", "fixture"), {
 		recursive: true,
 	});
-	fs.mkdirSync(path.join(directory, ".gleam_mutants"), { recursive: true });
+	fs.mkdirSync(path.join(directory, ".smolmut"), { recursive: true });
 	fs.mkdirSync(path.join(directory, "test", "corpus"), { recursive: true });
 	fs.writeFileSync(
 		path.join(directory, "gleam.toml"),
@@ -38,7 +38,7 @@ function makeProject(directory) {
 		"{}\n",
 	);
 	fs.writeFileSync(
-		path.join(directory, ".gleam_mutants", "impact.json"),
+		path.join(directory, ".smolmut", "impact.json"),
 		"{}\n",
 	);
 	fs.writeFileSync(path.join(directory, "test", "corpus", "case.json"), "{}\n");

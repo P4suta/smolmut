@@ -1,24 +1,24 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/io
 import gleam/list
 import gleam/option.{Some}
-import gleam_mutants/api
-import gleam_mutants/cache
-import gleam_mutants/core/path
-import gleam_mutants/platform
-import gleam_mutants/types
 import simplifile
+import smolmut/api
+import smolmut/cache
+import smolmut/core/path
+import smolmut/platform
+import smolmut/types
 import tomlet
 
 const project_config =
   "name = \"local_dependency_consumer\"\nversion = \"0.0.0\"\n"
   <> "[dependencies]\narithmetic_fixture = { path = \"../arithmetic\" }\n"
   <> "[dev_dependencies]\nassertion_fixture = { path = \"../assertion\" }\n"
-  <> "[tools.gleam_mutants]\nversion = 1\n"
-  <> "[tools.gleam_mutants.test]\ntarget = \"erlang\"\nruntime = \"erlang\"\n"
-  <> "[tools.gleam_mutants.cache]\nmode = \"read-write\"\n"
+  <> "[tools.smolmut]\nversion = 1\n"
+  <> "[tools.smolmut.test]\ntarget = \"erlang\"\nruntime = \"erlang\"\n"
+  <> "[tools.smolmut.cache]\nmode = \"read-write\"\n"
 
 const source =
   "import arithmetic_fixture\n"
@@ -28,7 +28,7 @@ pub fn main() {
   let directory =
     path.join(
       platform.temporary_directory(),
-      "gleam mutants local dependency " <> platform.random_nonce(),
+      "smolmut local dependency " <> platform.random_nonce(),
     )
   let project = path.join(directory, "consumer")
   let dependency = path.join(directory, "arithmetic")

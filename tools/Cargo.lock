@@ -65,10 +65,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
-name = "gleam-mutants-release"
+name = "smolmut-release"
 version = "0.0.0"
 dependencies = [
- "gleam-mutants-release-core",
+ "smolmut-release-core",
  "semver",
  "serde",
  "serde_json",
@@ -77,7 +77,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "gleam-mutants-release-core"
+name = "smolmut-release-core"
 version = "0.0.0"
 
 [[package]]

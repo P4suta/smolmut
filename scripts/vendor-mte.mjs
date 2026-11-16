@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import crypto from "node:crypto";
@@ -118,7 +118,7 @@ const schemaDestination = path.join(
 const provenanceDestination = path.join(vendorDirectory, "PROVENANCE.json");
 fs.mkdirSync(vendorDirectory, { recursive: true });
 fs.writeFileSync(
-	path.join(root, "src", "gleam_mutants", "mte_asset.gleam"),
+	path.join(root, "src", "smolmut", "mte_asset.gleam"),
 	gleamModule,
 	"utf8",
 );
@@ -151,7 +151,7 @@ fs.writeFileSync(
 );
 
 // Gleam publishes non-code package assets from priv/. Keep the repository-level copies as the audit source of truth and generate byte-identical distribution copies so Hex consumers receive all notices and provenance without runtime asset discovery.
-const distributionRoot = path.join(root, "priv", "gleam_mutants");
+const distributionRoot = path.join(root, "priv", "smolmut");
 const distributionVendor = path.join(
 	distributionRoot,
 	"vendor",

@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
-name = "gleam_mutants"
+name = "smolmut"
 summary = "Mutation testing for Gleam through a library and CLI"
-install = "gleam add --dev gleam_mutants"
-usage = "gleam run -m gleam_mutants -- run"
+install = "gleam add --dev smolmut"
+usage = "gleam run -m smolmut -- run"
 documentation_index = true
 copyright = "Yasunobu"
 license = "MIT OR Apache-2.0"

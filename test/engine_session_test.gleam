@@ -1,26 +1,26 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/string
-import gleam_mutants/cache
-import gleam_mutants/core/path
-import gleam_mutants/engine
-import gleam_mutants/platform
-import gleam_mutants/snapshot
 import simplifile
+import smolmut/cache
+import smolmut/core/path
+import smolmut/engine
+import smolmut/platform
+import smolmut/snapshot
 
 fn workspace(label: String) -> String {
   let root =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-session-" <> label <> "-" <> platform.random_nonce(),
+      "smolmut-session-" <> label <> "-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(path.join(root, "src"))
   let assert Ok(Nil) =
     simplifile.write(
       path.join(root, "gleam.toml"),
-      "name = \"session_fixture\"\nversion = \"0.0.0\"\n[tools.gleam_mutants]\nversion = 1\n",
+      "name = \"session_fixture\"\nversion = \"0.0.0\"\n[tools.smolmut]\nversion = 1\n",
     )
   let assert Ok(Nil) =
     simplifile.write(
@@ -205,9 +205,7 @@ pub fn catalogue_session_disposes_its_single_snapshot_after_callback_error_test(
 /// A worker carries the build directory the snapshot it came from has.
 ///
 /// This is the whole point of `duplicate`, and it is not visible in a verdict:
-/// a worker without `build` compiles the package and every dependency from
-/// cold, once per worker, so asking for more workers asked the compiler for
-/// more of the same work.
+/// a worker without `build` compiles the package and every dependency from cold, once per worker, so asking for more workers asked the compiler for more of the same work.
 pub fn a_duplicated_snapshot_carries_the_build_directory_test() {
   let root = workspace("duplicate")
   let assert Ok(Nil) =
@@ -224,8 +222,8 @@ pub fn a_duplicated_snapshot_carries_the_build_directory_test() {
     ))
     == Ok(False)
 
-  // What the baseline then does inside it: build. The artefacts are this run's
-  // own, and they are what a worker must not have to make for itself.
+  // What the baseline then does inside it: build.
+  // The artefacts are this run's own, and they are what a worker must not have to make for itself.
   let built = path.join(snapshot.root(captured), "build/dev/erlang")
   let assert Ok(Nil) = simplifile.create_directory_all(built)
   let assert Ok(Nil) =
@@ -252,10 +250,8 @@ pub fn a_duplicated_snapshot_carries_the_build_directory_test() {
 
 /// A link under the copy is left for the compiler to make again.
 ///
-/// Gleam links each package's `priv` into `build` by absolute path, so copying
-/// one would point the worker back at the tree it was copied from. Leaving it
-/// out costs nothing -- the next build makes it again, into the worker -- and
-/// it is the isolation a worker is for.
+/// Gleam links each package's `priv` into `build` by absolute path, so copying one would point the worker back at the tree it was copied from.
+/// Leaving it out costs nothing -- the next build makes it again, into the worker -- and it is the isolation a worker is for.
 pub fn a_duplicated_snapshot_leaves_a_link_for_the_compiler_test() {
   let root = workspace("duplicate-link")
   let assert Ok(Nil) =
@@ -283,17 +279,14 @@ pub fn a_duplicated_snapshot_leaves_a_link_for_the_compiler_test() {
 
 /// The compiler's work survives into the next capture; a stale source does not.
 ///
-/// Capturing into a directory that is kept is what lets the next run compile
-/// only what changed, and the whole risk of it is the other half: a file the
-/// workspace no longer has, or one an earlier run generated, would still be
-/// there to compile. Both are pinned here, because neither is visible in a
-/// verdict until it is wrong.
+/// Capturing into a directory that is kept is what lets the next run compile only what changed, and the whole risk of it is the other half: a file the workspace no longer has, or one an earlier run generated, would still be there to compile.
+/// Both are pinned here, because neither is visible in a verdict until it is wrong.
 pub fn a_kept_snapshot_holds_the_build_and_drops_what_the_workspace_lost_test() {
   let root = workspace("kept")
   let destination =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-kept-" <> platform.random_nonce(),
+      "smolmut-kept-" <> platform.random_nonce(),
     )
 
   let assert Ok(first) = snapshot.keep(root, destination, [])
@@ -309,7 +302,7 @@ pub fn a_kept_snapshot_holds_the_build_and_drops_what_the_workspace_lost_test() 
     simplifile.write(path.join(built, "artefact.beam"), "beam")
   let assert Ok(Nil) =
     simplifile.write(
-      path.join(destination, "src/gleam_mutants_runtime_abc.gleam"),
+      path.join(destination, "src/smolmut_runtime_abc.gleam"),
       "pub fn active() { \"\" }\n",
     )
   // And a source the workspace has since lost.
@@ -331,7 +324,7 @@ pub fn a_kept_snapshot_holds_the_build_and_drops_what_the_workspace_lost_test() 
     == Ok(False)
   assert simplifile.is_file(path.join(
       destination,
-      "src/gleam_mutants_runtime_abc.gleam",
+      "src/smolmut_runtime_abc.gleam",
     ))
     == Ok(False)
   // Which is to say: the kept copy is the workspace, and says so.
@@ -344,18 +337,14 @@ pub fn a_kept_snapshot_holds_the_build_and_drops_what_the_workspace_lost_test() 
 
 /// A kept copy is the largest thing this tool leaves behind, so it is bounded.
 ///
-/// One copy is a whole workspace and its build directory. Nothing else here
-/// removes anything, so without this the copies of every workspace ever
-/// mutated would sit in the cache until somebody noticed. The bound is on how
-/// many are kept rather than on how many bytes: reading a marker is one small
-/// file per workspace, where measuring a copy means walking every artefact in
-/// it, and a run should not walk every workspace to find out it is within its
-/// budget.
+/// One copy is a whole workspace and its build directory.
+/// Nothing else here removes anything, so without this the copies of every workspace ever mutated would sit in the cache until somebody noticed.
+/// The bound is on how many are kept rather than on how many bytes: reading a marker is one small file per workspace, where measuring a copy means walking every artefact in it, and a run should not walk every workspace to find out it is within its budget.
 pub fn kept_copies_are_bounded_by_how_recently_they_were_used_test() {
   let root =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-collect-" <> platform.random_nonce(),
+      "smolmut-collect-" <> platform.random_nonce(),
     )
   let place = fn(id: String, used: String) {
     let assert Ok(Nil) =

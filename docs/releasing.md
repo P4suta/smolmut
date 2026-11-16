@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -21,7 +21,7 @@ The manual `Release candidate evidence` workflow performs the complete preparati
 Pass its exact current commit as `source_sha` and leave `attest` false for an unsigned rehearsal.
 
 ```sh
-gh workflow run release-candidate.yml --repo P4suta/gleam-mutants \
+gh workflow run release-candidate.yml --repo P4suta/smolmut \
   --ref main -f source_sha=FULL_MAIN_COMMIT -f attest=false
 ```
 
@@ -48,7 +48,7 @@ Artifacts expire after seven days; an expired candidate must be prepared again.
 Download the unsigned artifact from the completed run and inspect it without signing or publication.
 
 ```sh
-gh run download RUN --repo P4suta/gleam-mutants \
+gh run download RUN --repo P4suta/smolmut \
   --name candidate-SOURCE-RUN-ATTEMPT-unsigned --dir build/review-candidate
 mise run release verify build/review-candidate SOURCE VERSION RUN ATTEMPT
 ```

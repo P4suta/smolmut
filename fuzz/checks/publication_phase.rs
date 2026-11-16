@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use gleam_mutants_release::candidate::Revision;
-use gleam_mutants_release::publication::{ControllerIdentity, Phase};
-use gleam_mutants_release_core::{ReleaseId, acquire_release};
+use smolmut_release::candidate::Revision;
+use smolmut_release::publication::{ControllerIdentity, Phase};
+use smolmut_release_core::{ReleaseId, acquire_release};
 
 pub fn check(data: &[u8]) {
     let Ok(text) = std::str::from_utf8(data) else {

@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
@@ -16,7 +16,7 @@ Development snapshots are unsupported.
 ## Reporting a vulnerability
 
 Do not open a public issue.
-Use GitHub's [private vulnerability reporting](https://github.com/P4suta/gleam-mutants/security/advisories/new) to contact the maintainers.
+Use GitHub's [private vulnerability reporting](https://github.com/P4suta/smolmut/security/advisories/new) to contact the maintainers.
 Include affected versions, impact, and a minimal reproduction without real secrets.
 You should receive an acknowledgement within seven days.
 

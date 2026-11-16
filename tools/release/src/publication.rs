@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::candidate::{self, Artifact, Revision};
 use crate::evidence::{self, Candidate, Identity};
 use crate::{constants, github, registry, runner};
-pub use gleam_mutants_release_core::{ControllerIdentity, PublicationPhase as Phase};
-use gleam_mutants_release_core::{
+use serde_json::Value;
+pub use smolmut_release_core::{ControllerIdentity, PublicationPhase as Phase};
+use smolmut_release_core::{
     Existing, ReleaseId, ReleaseSelection, WritePlan, acquire_release, can_finalize, plan_write,
     with_draft_evidence,
 };
-use serde_json::Value;
 use std::collections::BTreeMap;
 use std::fs;
 use std::io::Write;
@@ -215,7 +215,7 @@ pub fn plan(directory: &Path, identity: &Identity) -> Result<(), String> {
             }
         }
     }
-    let hex = registry_artifact(&candidate, "gleam_mutants-")?;
+    let hex = registry_artifact(&candidate, &format!("{}-", candidate::PACKAGE))?;
     if registry::observe(registry::Registry::Hex, &identity.version, &hex.sha256)?
         == Existing::Conflicting
         || registry::observe(
@@ -692,7 +692,7 @@ fn registry_plan(
     let (registry, artifact) = match phase {
         Phase::Hex => (
             registry::Registry::Hex,
-            registry_artifact(candidate, "gleam_mutants-")?,
+            registry_artifact(candidate, &format!("{}-", candidate::PACKAGE))?,
         ),
         Phase::Npm => {
             npm_client()?;
@@ -756,7 +756,7 @@ pub fn execute(phase: Phase, directory: &Path, identity: &Identity) -> Result<()
     match phase {
         Phase::Draft => create_draft(directory, identity, &assets(directory, &candidate)?),
         Phase::Hex => {
-            let artifact = registry_artifact(&candidate, "gleam_mutants-")?;
+            let artifact = registry_artifact(&candidate, &format!("{}-", candidate::PACKAGE))?;
             match registry_plan(phase, directory, identity, &candidate)? {
                 WritePlan::Reuse => Ok(()),
                 WritePlan::Refuse => Err("Hex version contains different bytes".into()),
@@ -792,7 +792,7 @@ pub fn execute(phase: Phase, directory: &Path, identity: &Identity) -> Result<()
             let expected = assets(directory, &candidate)?;
             let release = draft_evidence(phase, identity)?.live()?;
             reconcile(&mut store(directory, &release)?, &expected, false)?;
-            let hex = registry_artifact(&candidate, "gleam_mutants-")?;
+            let hex = registry_artifact(&candidate, &format!("{}-", candidate::PACKAGE))?;
             let npm = candidate.npm()?;
             let allowed = can_finalize(
                 tag(identity)? == Existing::Matching,
@@ -1222,10 +1222,7 @@ mod tests {
         let release = serde_json::json!({"id":RELEASE_ID,"tag_name":"v0.1.0","draft":true});
         assert_eq!(
             release_by_id_from(id, |path| {
-                assert_eq!(
-                    path,
-                    format!("repos/P4suta/gleam-mutants/releases/{RELEASE_ID}")
-                );
+                assert_eq!(path, format!("repos/P4suta/smolmut/releases/{RELEASE_ID}"));
                 Ok(release.clone())
             })
             .unwrap(),
@@ -1312,14 +1309,11 @@ mod tests {
         let proof = prepared_draft_from(
             &controller,
             |path| {
-                assert_eq!(path, "repos/P4suta/gleam-mutants/actions/runs/1");
+                assert_eq!(path, "repos/P4suta/smolmut/actions/runs/1");
                 Ok(metadata)
             },
             |path| {
-                assert_eq!(
-                    path,
-                    "repos/P4suta/gleam-mutants/actions/runs/1/jobs?filter=all"
-                );
+                assert_eq!(path, "repos/P4suta/smolmut/actions/runs/1/jobs?filter=all");
                 Ok(vec![job])
             },
         )

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 ---
@@ -86,13 +86,13 @@ jobs:
           "$RUN" "$ATTEMPT"
       - run: >-
           cargo build --locked --release --manifest-path tools/Cargo.toml
-          --bin gleam-mutants-release --bin release-publish
+          --bin smolmut-release --bin release-publish
           --target-dir build/release-controller
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ${{ steps.controller.outputs.artifact }}
           path: |
-            build/release-controller/release/gleam-mutants-release
+            build/release-controller/release/smolmut-release
             build/release-controller/release/release-publish
           if-no-files-found: error
           retention-days: 7
@@ -161,10 +161,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh attestation verify controller/gleam-mutants-release
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          gh attestation verify controller/smolmut-release
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - name: Verify the publication adapter before execution
@@ -172,19 +172,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify controller/release-publish
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - run: >-
-          chmod u+x controller/gleam-mutants-release
+          chmod u+x controller/smolmut-release
           controller/release-publish
       - name: Verify the original candidate again
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          ./controller/gleam-mutants-release fetch build/candidate
+          ./controller/smolmut-release fetch build/candidate
           "$SOURCE" "$VERSION" "$RUN" "$ATTEMPT"
       - name: Execute the approved draft phase
         id: draft
@@ -211,10 +211,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh attestation verify controller/gleam-mutants-release
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          gh attestation verify controller/smolmut-release
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - name: Verify the publication adapter before execution
@@ -222,19 +222,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify controller/release-publish
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - run: >-
-          chmod u+x controller/gleam-mutants-release
+          chmod u+x controller/smolmut-release
           controller/release-publish
       - name: Verify the original candidate again
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          ./controller/gleam-mutants-release fetch build/candidate
+          ./controller/smolmut-release fetch build/candidate
           "$SOURCE" "$VERSION" "$RUN" "$ATTEMPT"
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
@@ -275,10 +275,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh attestation verify controller/gleam-mutants-release
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          gh attestation verify controller/smolmut-release
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - name: Verify the publication adapter before execution
@@ -286,19 +286,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify controller/release-publish
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - run: >-
-          chmod u+x controller/gleam-mutants-release
+          chmod u+x controller/smolmut-release
           controller/release-publish
       - name: Verify the original candidate again
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          ./controller/gleam-mutants-release fetch build/candidate
+          ./controller/smolmut-release fetch build/candidate
           "$SOURCE" "$VERSION" "$RUN" "$ATTEMPT"
       - name: Execute the approved hex phase
         env:
@@ -330,10 +330,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh attestation verify controller/gleam-mutants-release
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          gh attestation verify controller/smolmut-release
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - name: Verify the publication adapter before execution
@@ -341,19 +341,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify controller/release-publish
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - run: >-
-          chmod u+x controller/gleam-mutants-release
+          chmod u+x controller/smolmut-release
           controller/release-publish
       - name: Verify the original candidate again
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          ./controller/gleam-mutants-release fetch build/candidate
+          ./controller/smolmut-release fetch build/candidate
           "$SOURCE" "$VERSION" "$RUN" "$ATTEMPT"
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
@@ -392,10 +392,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          gh attestation verify controller/gleam-mutants-release
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          gh attestation verify controller/smolmut-release
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - name: Verify the publication adapter before execution
@@ -403,19 +403,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify controller/release-publish
-          --repo P4suta/gleam-mutants --deny-self-hosted-runners
+          --repo P4suta/smolmut --deny-self-hosted-runners
           --signer-workflow
-          P4suta/gleam-mutants/.github/workflows/release-publish.yml
+          P4suta/smolmut/.github/workflows/release-publish.yml
           --source-ref refs/heads/main --source-digest "$GITHUB_SHA"
           --signer-digest "$GITHUB_SHA"
       - run: >-
-          chmod u+x controller/gleam-mutants-release
+          chmod u+x controller/smolmut-release
           controller/release-publish
       - name: Verify the original candidate again
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          ./controller/gleam-mutants-release fetch build/candidate
+          ./controller/smolmut-release fetch build/candidate
           "$SOURCE" "$VERSION" "$RUN" "$ATTEMPT"
       - name: Execute the approved finalize phase
         env:

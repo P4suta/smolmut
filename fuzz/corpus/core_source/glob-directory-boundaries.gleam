@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/string
-import gleam_mutants/core/mutant
+import smolmut/core/mutant
 
 pub fn matches(pattern: String, path: String) -> Bool {
   do_match(

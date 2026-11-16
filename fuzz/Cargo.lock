@@ -88,10 +88,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "gleam-mutants-release"
+name = "smolmut-release"
 version = "0.0.0"
 dependencies = [
- "gleam-mutants-release-core",
+ "smolmut-release-core",
  "semver",
  "serde",
  "serde_json",
@@ -99,21 +99,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "gleam-mutants-release-core"
+name = "smolmut-release-core"
 version = "0.0.0"
 
 [[package]]
-name = "gleam-mutants-release-fuzz"
+name = "smolmut-release-fuzz"
 version = "0.0.0"
 dependencies = [
- "gleam-mutants-release",
- "gleam-mutants-release-core",
- "gleam-mutants-verification",
+ "smolmut-release",
+ "smolmut-release-core",
+ "smolmut-verification",
  "libfuzzer-sys",
 ]
 
 [[package]]
-name = "gleam-mutants-verification"
+name = "smolmut-verification"
 version = "0.0.0"
 
 [[package]]

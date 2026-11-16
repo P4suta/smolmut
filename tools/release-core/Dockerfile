@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 FROM docker.io/library/rust:1.99.1-slim-bookworm@sha256:24707e70a4f1e23d9a7b25202ec43126d28a52294b96aad5c670df1fd1f1d400

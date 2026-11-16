@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
@@ -6,19 +6,19 @@ import gleam/option.{None, Some}
 import gleam/result
 import gleam/set
 import gleam/string
-import gleam_mutants/cache
-import gleam_mutants/cli
-import gleam_mutants/config
-import gleam_mutants/core/catalog
-import gleam_mutants/core/exit_policy
-import gleam_mutants/core/glob
-import gleam_mutants/core/interval_tree
-import gleam_mutants/core/mutant
-import gleam_mutants/core/operator
-import gleam_mutants/core/outcome
-import gleam_mutants/core/score
-import gleam_mutants/core/span
-import gleam_mutants/types
+import smolmut/cache
+import smolmut/cli
+import smolmut/config
+import smolmut/core/catalog
+import smolmut/core/exit_policy
+import smolmut/core/glob
+import smolmut/core/interval_tree
+import smolmut/core/mutant
+import smolmut/core/operator
+import smolmut/core/outcome
+import smolmut/core/score
+import smolmut/core/span
+import smolmut/types
 
 pub fn span_boundaries_test() {
   assert span.new(0, 0) == Ok(span.unsafe_new(0, 0))
@@ -109,10 +109,8 @@ pub fn display_ids_are_unique_across_the_selected_catalogue_test() {
 /// An `Option` that is built is mutated to the absence of one.
 ///
 /// `Some(x)` is definitely an `Option`, so `None` is definitely the same type:
-/// the evidence is the constructor rather than a guess about the expression
-/// around it. It is the one shape of this kind that has such evidence -- `Ok`
-/// and `Error` need not agree on their two type arguments -- and it is the one
-/// that catches a `None` path nobody wrote a test for.
+/// the evidence is the constructor rather than a guess about the expression around it.
+/// It is the one shape of this kind that has such evidence -- `Ok` and `Error` need not agree on their two type arguments -- and it is the one that catches a `None` path nobody wrote a test for.
 pub fn catalog_mutates_a_constructed_option_to_none_test() {
   let source =
     "import gleam/option.{type Option, None, Some}\n\n"
@@ -132,16 +130,13 @@ pub fn catalog_mutates_a_constructed_option_to_none_test() {
       string.compare,
     )
     == ["None", "option.None"]
-  // The qualifier is copied from the source, so a module imported under
-  // another name keeps it.
+  // The qualifier is copied from the source, so a module imported under another name keeps it.
   assert list.sort(
       list.map(options, fn(item) { item.original }),
       string.compare,
     )
     == ["Some(head)", "option.Some(value)"]
-  // A pattern is not a construction: `Some(head) ->` on the left of an arrow
-  // is matched against, and replacing it would change what the case means
-  // rather than what it answers.
+  // A pattern is not a construction: `Some(head) ->` on the left of an arrow is matched against, and replacing it would change what the case means rather than what it answers.
   assert list.length(options) == 2
   // Byte spans still describe the file they came from.
   let assert Ok(forest) = interval_tree.build(source, discovered.mutants)
@@ -155,10 +150,8 @@ pub fn catalog_mutates_a_constructed_option_to_none_test() {
 
 /// A `Result` that is built is left alone.
 ///
-/// `Ok(a)` and `Error(b)` are the same type only where `a` and `b` are, which
-/// nothing here knows. Emitting the swap anyway would be the guesswork this
-/// catalogue refuses everywhere else, paid for with a compiler validation per
-/// candidate.
+/// `Ok(a)` and `Error(b)` are the same type only where `a` and `b` are, which nothing here knows.
+/// Emitting the swap anyway would be the guesswork this catalogue refuses everywhere else, paid for with a compiler validation per candidate.
 pub fn catalog_leaves_a_constructed_result_alone_test() {
   let source =
     "pub fn parse(value: Int) -> Result(Int, String) {\n"
@@ -174,11 +167,8 @@ pub fn catalog_leaves_a_constructed_result_alone_test() {
 
 /// The replacement is spelled the way the module itself can write it.
 ///
-/// `import gleam/option.{Some}` leaves `None` out of scope, so a bare `None`
-/// would not compile there. The names are read off the imports instead: an
-/// alias is kept, a module holding only `Some` unqualified reaches `None`
-/// through the module, and a lookalike constructor that has no `None` beside
-/// it is left alone rather than mutated into something unwritable.
+/// `import gleam/option.{Some}` leaves `None` out of scope, so a bare `None` would not compile there.
+/// The names are read off the imports instead: an alias is kept, a module holding only `Some` unqualified reaches `None` through the module, and a lookalike constructor that has no `None` beside it is left alone rather than mutated into something unwritable.
 pub fn catalog_spells_none_the_way_the_module_can_test() {
   // Only `Some` is unqualified, so `None` has to go through the module.
   assert option_replacements(
@@ -225,10 +215,8 @@ fn option_replacements(source: String) -> List(String) {
 
 /// Either half of a concatenation is dropped.
 ///
-/// `<>` joins two strings, so each half is definitely a string and definitely
-/// the same type as the whole -- the operator is its own evidence, the way a
-/// typed comparison is. Keeping one half asks whether anything checks that the
-/// other one reaches the answer, which is the question nothing used to ask:
+/// `<>` joins two strings, so each half is definitely a string and definitely the same type as the whole -- the operator is its own evidence, the way a typed comparison is.
+/// Keeping one half asks whether anything checks that the other one reaches the answer, which is the question nothing used to ask:
 /// `<>` was the one binary operator with no mutation at all.
 pub fn catalog_drops_either_half_of_a_concatenation_test() {
   let source =
@@ -248,8 +236,7 @@ pub fn catalog_drops_either_half_of_a_concatenation_test() {
   // The span covers the whole join, so each mutant stands where it stood.
   assert list.all(halves, fn(item) { item.original == "\"hello, \" <> name" })
 
-  // A chain is left-associative, so the outer join keeps `a <> b` on one side
-  // and the inner one is offered its own two halves.
+  // A chain is left-associative, so the outer join keeps `a <> b` on one side and the inner one is offered its own two halves.
   let chained =
     "pub fn join(a: String, b: String, c: String) {\n  a <> b <> c\n}\n"
   let assert Ok(discovered) =
@@ -265,12 +252,9 @@ pub fn catalog_drops_either_half_of_a_concatenation_test() {
 
 /// The sign comes off a negated integer.
 ///
-/// `!` was already removed and `-` was not, though it is the same shape and
-/// the same kind of evidence: Gleam's unary `-` is an integer one, so dropping
-/// the sign keeps the type and flips the answer. Nothing else reaches that
-/// sign. A written-out negative number is lexed as a single token and is
-/// `integer-neutral`'s business, and a swap of `+` for `-` needs a binary
-/// operator that is not there.
+/// `!` was already removed and `-` was not, though it is the same shape and the same kind of evidence: Gleam's unary `-` is an integer one, so dropping the sign keeps the type and flips the answer.
+/// Nothing else reaches that sign.
+/// A written-out negative number is lexed as a single token and is `integer-neutral`'s business, and a swap of `+` for `-` needs a binary operator that is not there.
 pub fn catalog_drops_an_integer_sign_test() {
   let source =
     "pub fn shift(value: Int, scale: Float) {\n"
@@ -284,9 +268,8 @@ pub fn catalog_drops_an_integer_sign_test() {
 
   assert list.map(signs, fn(item) { #(item.original, item.replacement) })
     == [#("-value", "value")]
-  // `-1.0` is one token, not a sign in front of `1.0`, so it belongs to the
-  // neutral rule; `value - 1` is a subtraction and belongs to the arithmetic
-  // one. Neither is a sign this rule may take.
+  // `-1.0` is one token, not a sign in front of `1.0`, so it belongs to the neutral rule; `value - 1` is a subtraction and belongs to the arithmetic one.
+  // Neither is a sign this rule may take.
   assert list.sort(
       discovered.mutants
         |> list.map(fn(item) { operator.name(item.operator) }),
@@ -300,18 +283,13 @@ pub fn catalog_drops_an_integer_sign_test() {
 
 /// Which mutants may be answered twice, and which may not.
 ///
-/// A run already walks the suite once with nothing mutated. Where the
-/// replacement may be evaluated beside what it replaces on that same walk, the
-/// run learns whether the two ever part -- and a mutant whose two answers never
-/// parted cannot be told from the original by any of those tests, so it needs
-/// none of them run against it.
+/// A run already walks the suite once with nothing mutated.
+/// Where the replacement may be evaluated beside what it replaces on that same walk, the run learns whether the two ever part -- and a mutant whose two answers never parted cannot be told from the original by any of those tests, so it needs none of them run against it.
 ///
-/// The whole mutated expression has to be safe, not just the token that
-/// changes, because the replacement re-evaluates all of it. Gleam makes that a
-/// question about syntax alone: there are no effects outside external
-/// functions, and the arithmetic is total on both targets, so literals,
-/// variables and operators answer the same however often they are asked. A
-/// call is where it stops.
+/// The whole mutated expression has to be safe, not just the token that changes, because the replacement re-evaluates all of it.
+/// Gleam makes that a question about syntax alone: there are no effects outside external functions, and the arithmetic is total on both targets, so literals,
+/// variables and operators answer the same however often they are asked.
+/// A call is where it stops.
 pub fn catalog_marks_what_may_be_answered_twice_test() {
   let source =
     "import gleam/option.{type Option, Some}\n\n"
@@ -347,14 +325,11 @@ pub fn catalog_marks_what_may_be_answered_twice_test() {
   assert list.contains(marked, "a + b")
   assert list.contains(marked, "n * 2")
   assert list.contains(marked, "2")
-  // Building a value is not running the program, so a list of safe elements
-  // is safe, and so is a constructor applied to them.
+  // Building a value is not running the program, so a list of safe elements is safe, and so is a constructor applied to them.
   assert list.contains(marked, "[a, b] == [b, a]")
-  // Reading a field runs nothing either, and which fields a value has is
-  // settled by the compiler rather than at run time.
+  // Reading a field runs nothing either, and which fields a value has is settled by the compiler rather than at run time.
   assert list.contains(marked, "point.x + b")
-  // A function applied is the program run, and the program may reach an
-  // external function, which may do anything -- including not returning.
+  // A function applied is the program run, and the program may reach an external function, which may do anything -- including not returning.
   assert !list.contains(marked, "double(a) + b")
   assert !list.contains(marked, "wrap(a) == Some(b)")
   // Nothing is marked that is not a mutant of this file.
@@ -442,7 +417,7 @@ pub fn partial_overlap_is_rejected_after_stack_validation_test() {
 
 pub fn config_defaults_and_toml_precedence_test() {
   let source =
-    "# keep me\n[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.execution]\njobs = 3\n[tools.gleam_mutants.policy]\nstrict = false\nminimum_score = 80\n[tools.gleam_mutants.report]\ndirectory = \"artifacts/mutation\"\nhigh = 90\nlow = 70\n"
+    "# keep me\n[tools.smolmut]\nversion = 1\n[tools.smolmut.execution]\njobs = 3\n[tools.smolmut.policy]\nstrict = false\nminimum_score = 80\n[tools.smolmut.report]\ndirectory = \"artifacts/mutation\"\nhigh = 90\nlow = 70\n"
   let assert Ok(decoded) = config.decode(source, 32)
   assert decoded.jobs == 3
   assert decoded.test_selection == types.TestSelectionAuto
@@ -460,8 +435,8 @@ pub fn config_defaults_and_toml_precedence_test() {
     config.initialise("name = \"demo\" # comment\n")
   assert changed
   assert string.contains(initialised, "# comment")
-  assert string.contains(initialised, "[tools.gleam_mutants]")
-  assert string.contains(initialised, "[tools.gleam_mutants.report]")
+  assert string.contains(initialised, "[tools.smolmut]")
+  assert string.contains(initialised, "[tools.smolmut.report]")
   assert string.contains(initialised, "test_selection = \"auto\"")
   assert string.contains(initialised, "directory = \"reports/mutation\"")
   assert string.contains(initialised, "high = 80")
@@ -472,7 +447,7 @@ pub fn config_defaults_and_toml_precedence_test() {
 
 pub fn test_selection_config_and_cli_override_test() {
   let source =
-    "[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.execution]\ntest_selection = \"full\"\n"
+    "[tools.smolmut]\nversion = 1\n[tools.smolmut.execution]\ntest_selection = \"full\"\n"
   let assert Ok(decoded) = config.decode(source, 4)
   assert decoded.test_selection == types.TestSelectionFull
 
@@ -488,15 +463,14 @@ pub fn test_selection_config_and_cli_override_test() {
     == Error("GMU1002: --test-selection requires auto or full")
   let assert Error(config.ConfigError(_, _, message)) =
     config.decode(
-      "[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.execution]\ntest_selection = \"sometimes\"\n",
+      "[tools.smolmut]\nversion = 1\n[tools.smolmut.execution]\ntest_selection = \"sometimes\"\n",
       4,
     )
   assert string.contains(message, "must be auto or full")
 }
 
 pub fn config_unknown_key_has_position_test() {
-  let error =
-    config.decode("[tools.gleam_mutants]\nversion = 1\nunknown = true\n", 4)
+  let error = config.decode("[tools.smolmut]\nversion = 1\nunknown = true\n", 4)
   let assert Error(config.ConfigError(line, column, message)) = error
   assert line == 3
   assert column == 1
@@ -504,18 +478,17 @@ pub fn config_unknown_key_has_position_test() {
 
   let report_error =
     config.decode(
-      "[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.report]\nunknown = true\n",
+      "[tools.smolmut]\nversion = 1\n[tools.smolmut.report]\nunknown = true\n",
       4,
     )
   let assert Error(config.ConfigError(report_line, _, report_message)) =
     report_error
   assert report_line == 4
-  assert string.contains(report_message, "tools.gleam_mutants.report.unknown")
+  assert string.contains(report_message, "tools.smolmut.report.unknown")
 }
 
 pub fn report_config_rejects_unsafe_paths_and_thresholds_test() {
-  let prefix =
-    "[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.report]\n"
+  let prefix = "[tools.smolmut]\nversion = 1\n[tools.smolmut.report]\n"
   let assert Error(config.ConfigError(_, _, absolute_message)) =
     config.decode(prefix <> "directory = \"/tmp/report\"\n", 4)
   assert string.contains(absolute_message, "safe relative subdirectory")
@@ -734,13 +707,13 @@ pub fn cache_fingerprint_is_order_and_input_sensitive_test() {
 pub fn cache_directional_modes_decode_test() {
   let assert Ok(read_only) =
     config.decode(
-      "[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.cache]\nmode = \"read-only\"\n",
+      "[tools.smolmut]\nversion = 1\n[tools.smolmut.cache]\nmode = \"read-only\"\n",
       4,
     )
   assert read_only.cache_mode == config.CacheReadOnly
   let assert Ok(write_only) =
     config.decode(
-      "[tools.gleam_mutants]\nversion = 1\n[tools.gleam_mutants.cache]\nmode = \"write-only\"\n",
+      "[tools.smolmut]\nversion = 1\n[tools.smolmut.cache]\nmode = \"write-only\"\n",
       4,
     )
   assert write_only.cache_mode == config.CacheWriteOnly

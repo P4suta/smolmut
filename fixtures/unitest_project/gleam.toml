@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 name = "unitest_fixture"
@@ -10,8 +10,8 @@ gleam_stdlib = ">= 0.44.0 and < 2.0.0"
 [dev_dependencies]
 unitest = ">= 1.6.0 and < 1.7.0"
 
-[tools.gleam_mutants]
+[tools.smolmut]
 version = 1
 
-[tools.gleam_mutants.test]
+[tools.smolmut.test]
 command = ["gleam", "test", "--", "--seed", "123"]

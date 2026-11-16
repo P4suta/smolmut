@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 [tools]
@@ -76,7 +76,7 @@ description = "Run unit and end-to-end tests on Erlang, Node, Deno, and Bun"
 run = [
   "gleam test --target erlang",
   "gleam test --target javascript --runtime node",
-  "deno run --allow-read --allow-write --allow-run --allow-env=GLEAM_MUTANTS_ACTIVE,GLEAM_MUTANTS_RUNTIME,GLEAM_MUTANTS_TEST_IMPACT_FILE,GLEAM_MUTANTS_TEST_SELECTION_FILE,TMPDIR,TEMP,TMP,HOME,USERPROFILE,XDG_CACHE_HOME,LOCALAPPDATA,GITHUB_ACTIONS,GITHUB_STEP_SUMMARY build/dev/javascript/gleam_mutants/gleam@@private_main_v1.19.2.mjs",
+  "deno run --allow-read --allow-write --allow-run --allow-env=SMOLMUT_ACTIVE,SMOLMUT_RUNTIME,SMOLMUT_TEST_IMPACT_FILE,SMOLMUT_TEST_SELECTION_FILE,TMPDIR,TEMP,TMP,HOME,USERPROFILE,XDG_CACHE_HOME,LOCALAPPDATA,GITHUB_ACTIONS,GITHUB_STEP_SUMMARY build/dev/javascript/smolmut/gleam@@private_main_v1.19.2.mjs",
   "gleam test --target javascript --runtime bun",
   "gleam run -m engine_matrix_smoke --target erlang",
   "gleam run -m framework_matrix_smoke --target erlang",
@@ -162,7 +162,7 @@ run = [
   "mise x gleam@1.17.0 node@20.0.0 -- gleam test --target erlang",
   "mise x gleam@1.17.0 node@20.0.0 -- gleam test --target javascript --runtime node",
   "mise x node@20.0.0 -- gleam test --target javascript --runtime node",
-  "mise x node@20.0.0 -- gleam run -m gleam_mutants --target javascript --runtime node -- --version",
+  "mise x node@20.0.0 -- gleam run -m smolmut --target javascript --runtime node -- --version",
 ]
 
 [tasks.dogfood]

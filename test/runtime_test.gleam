@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/string
-import gleam_mutants/core/path
-import gleam_mutants/platform
-import gleam_mutants/runtime
 import simplifile
+import smolmut/core/path
+import smolmut/platform
+import smolmut/runtime
 import tomlet
 
 @target(erlang)
@@ -41,7 +41,7 @@ fn fresh_snapshot_root() -> String {
   let root =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-runtime-" <> platform.random_nonce(),
+      "smolmut-runtime-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory_all(root)
   let assert Ok(Nil) =
@@ -118,16 +118,16 @@ pub fn generated_runtime_resolves_the_active_mutant_per_process_test() {
   let after_cleanup = active(module)
   let assert Ok(Nil) = simplifile.delete(root)
 
-  let from_environment = platform.env("GLEAM_MUTANTS_ACTIVE")
+  let from_environment = platform.env("SMOLMUT_ACTIVE")
   assert unset == from_environment
   assert with_dictionary == "m1"
   assert with_persistent_term == "m2"
   assert with_both == "m1"
   assert in_spawned_process == "m2"
   assert after_cleanup == from_environment
-  assert string.contains(erlang_source, "GLEAM_MUTANTS_TEST_IMPACT_FILE")
-  assert string.contains(erlang_source, "gleam_mutants_test_context")
-  assert !string.contains(erlang_source, "{gleam_mutants, test_context}")
+  assert string.contains(erlang_source, "SMOLMUT_TEST_IMPACT_FILE")
+  assert string.contains(erlang_source, "smolmut_test_context")
+  assert !string.contains(erlang_source, "{smolmut, test_context}")
 }
 
 pub fn generated_javascript_runtime_uses_process_context_without_a_global_override_test() {
@@ -141,9 +141,9 @@ pub fn generated_javascript_runtime_uses_process_context_without_a_global_overri
   assert !string.contains(source, "set_active")
   assert string.contains(source, "globalThis.process?.env")
   assert string.contains(source, "globalThis.Deno.env.get")
-  assert string.contains(source, "GLEAM_MUTANTS_ACTIVE")
-  assert string.contains(source, "GLEAM_MUTANTS_TEST_IMPACT_FILE")
-  assert string.contains(source, "Symbol.for(\"gleam-mutants.test-context\")")
+  assert string.contains(source, "SMOLMUT_ACTIVE")
+  assert string.contains(source, "SMOLMUT_TEST_IMPACT_FILE")
+  assert string.contains(source, "Symbol.for(\"smolmut.test-context\")")
   assert string.contains(source, "new Map()")
 }
 
@@ -162,7 +162,7 @@ pub fn generated_javascript_runtime_isolates_parallel_process_contexts_test() {
         "node",
         ["--input-type=module", "-e", script],
         root,
-        [#("GLEAM_MUTANTS_ACTIVE", id)],
+        [#("SMOLMUT_ACTIVE", id)],
         5000,
       )
     })

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -12,7 +12,7 @@ function commands(module) {
 		"build",
 		"dev",
 		"javascript",
-		"gleam_mutants",
+		"smolmut",
 		`${module}.mjs`,
 	);
 	const importMain = `import { main } from ${JSON.stringify(pathToFileURL(main).href)}; main();`;
@@ -42,8 +42,8 @@ for (const code of [130, 143]) {
 					encoding: "utf8",
 					env: {
 						...process.env,
-						GLEAM_MUTANTS_TEST_MODE: mode,
-						GLEAM_MUTANTS_INTERRUPT_CODE: String(code),
+						SMOLMUT_TEST_MODE: mode,
+						SMOLMUT_INTERRUPT_CODE: String(code),
 						GITHUB_ACTIONS: "true",
 					},
 					windowsHide: true,

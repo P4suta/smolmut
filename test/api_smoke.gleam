@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/io
@@ -6,14 +6,14 @@ import gleam/list
 import gleam/option.{Some}
 import gleam/result
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/core/bytes
-import gleam_mutants/core/path
-import gleam_mutants/engine
-import gleam_mutants/report
-import gleam_mutants/snapshot
-import gleam_mutants/types
 import simplifile
+import smolmut/api
+import smolmut/core/bytes
+import smolmut/core/path
+import smolmut/engine
+import smolmut/report
+import smolmut/snapshot
+import smolmut/types
 
 pub fn main() {
   let assert Ok(copy) = snapshot.create("fixtures/basic_project")

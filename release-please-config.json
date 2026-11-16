@@ -8,8 +8,9 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "component": "gleam-mutants",
-      "package-name": "gleam_mutants",
+      "bump-minor-pre-major": true,
+      "component": "smolmut",
+      "package-name": "smolmut",
       "changelog-path": "CHANGELOG.md",
       "initial-version": "0.1.0",
       "version-file": "VERSION",
@@ -20,7 +21,7 @@
         },
         {
           "type": "generic",
-          "path": "src/gleam_mutants/version.gleam"
+          "path": "src/smolmut/version.gleam"
         }
       ]
     }

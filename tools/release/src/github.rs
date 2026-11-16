@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::candidate::{self, Revision, Version};
@@ -19,8 +19,7 @@ const BUILD_JOB: &str = "Verify and build distributions";
 const SEAL_JOB: &str = "Bind candidate evidence";
 const ATTEST_JOB: &str = "Attest verified candidate";
 const VERIFY_JOB: &str = "Verify retained provenance";
-pub(crate) const PROPOSAL_BRANCH: &str =
-    "release-please--branches--main--components--gleam-mutants";
+pub(crate) const PROPOSAL_BRANCH: &str = "release-please--branches--main--components--smolmut";
 const ACTIONS_BOT: &str = "github-actions[bot]";
 
 #[derive(Debug, PartialEq, Eq)]
@@ -107,7 +106,7 @@ fn validate_proposal_files(files: &[Value]) -> Result<(), String> {
         "CHANGELOG.md",
         "VERSION",
         "gleam.toml",
-        "src/gleam_mutants/version.gleam",
+        "src/smolmut/version.gleam",
     ];
     if files.is_empty()
         || files.iter().any(|file| {
@@ -556,7 +555,7 @@ pub fn fetch(directory: &Path, identity: &Identity) -> Result<Candidate, String>
 }
 
 pub fn proposal_checks() -> Result<(), String> {
-    use gleam_mutants_release_core::{CiAction, CiRecord, proposal_ci};
+    use smolmut_release_core::{CiAction, CiRecord, proposal_ci};
     repository()?;
     let pulls = list(
         &format!("repos/{}/pulls?state=open", candidate::REPOSITORY),

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::candidate::{self, Artifact, Revision, Version};
@@ -292,7 +292,11 @@ impl Candidate {
     }
 
     pub fn npm(&self) -> Result<&Artifact, String> {
-        let name = format!("gleam-mutants-{}.tgz", self.identity.version.as_str());
+        let name = format!(
+            "{}-{}.tgz",
+            candidate::PACKAGE,
+            self.identity.version.as_str()
+        );
         self.artifacts
             .iter()
             .find(|a| a.path == name)

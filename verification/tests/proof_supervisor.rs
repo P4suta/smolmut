@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 #[path = "../src/supervisor.rs"]
@@ -24,7 +24,7 @@ fn directory() -> std::path::PathBuf {
         .as_nanos();
     let sequence = DIRECTORY_SEQUENCE.fetch_add(1, Ordering::Relaxed);
     let path = std::env::temp_dir().join(format!(
-        "gleam-mutants-supervisor-{}-{nonce}-{sequence}",
+        "smolmut-supervisor-{}-{nonce}-{sequence}",
         std::process::id()
     ));
     std::fs::create_dir(&path).expect("owned fixture directory");

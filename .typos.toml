@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 [files]
@@ -8,7 +8,7 @@ extend-exclude = [
   "manifest.toml",
   "LICENSE-*",
   "reports/mutation",
-  "src/gleam_mutants/mte_asset.gleam",
+  "src/smolmut/mte_asset.gleam",
   "vendor",
 ]
 

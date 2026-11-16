@@ -1,20 +1,19 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
 import gleam/result
-import gleam_mutants/cli
-import gleam_mutants/platform
+import smolmut/cli
+import smolmut/platform
 
 pub fn main() {
   let code =
-    platform.env("GLEAM_MUTANTS_INTERRUPT_CODE")
+    platform.env("SMOLMUT_INTERRUPT_CODE")
     |> int.parse
     |> result.unwrap(130)
     |> int.to_string
-  let command = case platform.env("GLEAM_MUTANTS_TEST_MODE") {
-    "batch" ->
-      "process.exit(process.env.GLEAM_MUTANTS_ACTIVE ? " <> code <> " : 0)"
+  let command = case platform.env("SMOLMUT_TEST_MODE") {
+    "batch" -> "process.exit(process.env.SMOLMUT_ACTIVE ? " <> code <> " : 0)"
     _ -> "process.exit(" <> code <> ")"
   }
   cli.run([

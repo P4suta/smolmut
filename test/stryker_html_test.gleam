@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/string
-import gleam_mutants/stryker_html
+import smolmut/stryker_html
 
 pub fn adversarial_json_is_non_executable_and_offline_test() {
   let json =

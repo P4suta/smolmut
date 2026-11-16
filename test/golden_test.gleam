@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
-import gleam_mutants/core/catalog
-import gleam_mutants/core/operator
-import gleam_mutants/core/outcome
-import gleam_mutants/platform
-import gleam_mutants/types.{
+import smolmut/core/catalog
+import smolmut/core/operator
+import smolmut/core/outcome
+import smolmut/platform
+import smolmut/types.{
   Bun, Erlang, Killed, Node, RuntimeOutcome, Survived, TestError, TimedOut,
 }
 

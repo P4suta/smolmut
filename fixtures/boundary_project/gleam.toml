@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 name = "boundary_fixture"
@@ -10,8 +10,8 @@ gleam_stdlib = ">= 0.44.0 and < 2.0.0"
 [dev_dependencies]
 gleeunit = ">= 1.9.0 and < 2.0.0"
 
-[tools.gleam_mutants]
+[tools.smolmut]
 version = 1
 
-[tools.gleam_mutants.cache]
+[tools.smolmut.cache]
 mode = "off"

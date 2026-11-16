@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -17,7 +17,7 @@ const nativeSchema = JSON.parse(
 );
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 const validateNative = ajv.compile(nativeSchema);
-const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "gleam-mutants-ecosystem-"));
+const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "smolmut-ecosystem-"));
 
 const corpora = [
   {
@@ -153,28 +153,28 @@ function sourceHash(project, scope) {
 function configure(project, corpus) {
   const gleamToml = path.join(project, "gleam.toml");
   const source = fs.readFileSync(gleamToml, "utf8");
-  if (/\[tools\.gleam_mutants(?:\.|\])/.test(source)) {
-    throw new Error(`${corpus.name} now contains its own gleam_mutants configuration; update the pinned corpus adapter`);
+  if (/\[tools\.smolmut(?:\.|\])/.test(source)) {
+    throw new Error(`${corpus.name} now contains its own smolmut configuration; update the pinned corpus adapter`);
   }
   const configuration = `
 
-[tools.gleam_mutants]
+[tools.smolmut]
 version = 1
 
-[tools.gleam_mutants.test]
+[tools.smolmut.test]
 target = "${corpus.target}"
 runtime = "${corpus.runtime}"
 
-[tools.gleam_mutants.execution]
+[tools.smolmut.execution]
 jobs = 4
 
-[tools.gleam_mutants.cache]
+[tools.smolmut.cache]
 mode = "off"
 
-[tools.gleam_mutants.policy]
+[tools.smolmut.policy]
 strict = false
 
-[tools.gleam_mutants.report]
+[tools.smolmut.report]
 formats = []
 history = false
 `;
@@ -233,7 +233,7 @@ function normalizedResult(corpus) {
     [
       "run",
       "-m",
-      "gleam_mutants",
+      "smolmut",
       "--target",
       "erlang",
       "--",

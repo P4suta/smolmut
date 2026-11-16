@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/option.{None, Some}
-import gleam_mutants/error
-import gleam_mutants/types
+import smolmut/error
+import smolmut/types
 
 pub fn interruption_preserves_operation_failure_context_test() {
   list.each([130, 143], fn(code) {

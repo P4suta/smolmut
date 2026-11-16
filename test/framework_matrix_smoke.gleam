@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/option.{Some}
-import gleam_mutants/engine.{Options}
 import report_test_support
+import smolmut/engine.{Options}
 
 pub fn main() {
   let options =

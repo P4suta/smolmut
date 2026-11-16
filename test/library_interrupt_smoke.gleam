@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
@@ -7,13 +7,13 @@ import gleam/list
 import gleam/option.{Some}
 import gleam/result
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/platform
-import gleam_mutants/types
+import smolmut/api
+import smolmut/platform
+import smolmut/types
 
 pub fn main() {
   let code =
-    platform.env("GLEAM_MUTANTS_INTERRUPT_CODE")
+    platform.env("SMOLMUT_INTERRUPT_CODE")
     |> int.parse
     |> result.unwrap(130)
   let script =
@@ -43,7 +43,7 @@ pub fn main() {
   list.each(
     [
       script,
-      "process.stdout.write('child-interrupt-output'); process.exit(process.env.GLEAM_MUTANTS_ACTIVE ? "
+      "process.stdout.write('child-interrupt-output'); process.exit(process.env.SMOLMUT_ACTIVE ? "
         <> int.to_string(code)
         <> " : 0)",
     ],

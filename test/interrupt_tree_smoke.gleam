@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-import gleam_mutants/platform
+import smolmut/platform
 
 pub fn main() {
   let assert [ready_a, ready_b, marker_a, marker_b] = platform.arguments()

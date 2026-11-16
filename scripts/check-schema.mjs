@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -54,7 +54,7 @@ function cliFixture(
 	root = "fixtures/basic_project",
 	environment = {},
 ) {
-	const args = ["run", "-m", "gleam_mutants", "--target", target];
+	const args = ["run", "-m", "smolmut", "--target", target];
 	if (target === "javascript") args.push("--runtime", "node");
 	args.push("--", "--root", root, ...command);
 	const result = childProcess.spawnSync("gleam", args, {

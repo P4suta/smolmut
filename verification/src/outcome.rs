@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::fragment::{bind, boolean, choice, scalar_literal};
@@ -36,7 +36,7 @@ pub fn derive(source: &str) -> Result<String, String> {
 mod tests {
     use super::*;
 
-    const SOURCE: &str = include_str!("../../src/gleam_mutants/core/outcome.gleam");
+    const SOURCE: &str = include_str!("../../src/smolmut/core/outcome.gleam");
 
     #[test]
     fn derives_error_payloads_and_priority_from_the_complete_module() {

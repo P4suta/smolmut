@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::path::Path;
@@ -86,14 +86,14 @@ fn concurrent_shared_directory_creation_preserves_another_participant(root: &Pat
         .expect("clock after epoch")
         .as_nanos();
     let fixture = std::env::temp_dir().join(format!(
-        "gleam-mutants-shared-directory-{}-{nonce}",
+        "smolmut-shared-directory-{}-{nonce}",
         std::process::id()
     ));
     std::fs::create_dir(&fixture).expect("exclusive fixture root");
     let directory = fixture.join("shared");
     let ready = fixture.join("ready");
     let release = fixture.join("release");
-    let module = root.join("build/dev/javascript/gleam_mutants/gleam_mutants/platform.mjs");
+    let module = root.join("build/dev/javascript/smolmut/smolmut/platform.mjs");
     let command = |role: &str| {
         let mut command = Command::new("node");
         command

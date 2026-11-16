@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-import gleam_mutants/core/path
+import smolmut/core/path
 
 pub fn parent_preserves_absolute_roots_test() {
   assert path.parent("") == ""

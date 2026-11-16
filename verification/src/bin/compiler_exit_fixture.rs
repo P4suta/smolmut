@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::process::ExitCode;
@@ -7,7 +7,7 @@ const INTERRUPTED_EXIT_CODE: u8 = 130;
 const TERMINATED_EXIT_CODE: u8 = 143;
 
 fn main() -> ExitCode {
-    match std::env::var("GLEAM_MUTANTS_INTERRUPT_CODE")
+    match std::env::var("SMOLMUT_INTERRUPT_CODE")
         .ok()
         .and_then(|value| value.parse::<u8>().ok())
     {

@@ -1,22 +1,22 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
 import gleam/list
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/core/path
-import gleam_mutants/local_dependencies
-import gleam_mutants/platform
-import gleam_mutants/snapshot
 import simplifile
+import smolmut/api
+import smolmut/core/path
+import smolmut/local_dependencies
+import smolmut/platform
+import smolmut/snapshot
 import tomlet
 
 fn fixture() -> String {
   let root =
     path.join(
       platform.temporary_directory(),
-      "gleam-mutants-dependencies-" <> platform.random_nonce(),
+      "smolmut-dependencies-" <> platform.random_nonce(),
     )
   let assert Ok(Nil) = simplifile.create_directory(root)
   root
@@ -40,7 +40,7 @@ fn package(root: String, name: String, dependencies: String) -> String {
 }
 
 fn dependency_path(root: String, name: String) -> String {
-  path.join(root, ".gleam_mutants/dependencies/" <> name)
+  path.join(root, ".smolmut/dependencies/" <> name)
 }
 
 fn config(root: String) -> tomlet.Document {
@@ -76,7 +76,7 @@ pub fn transitive_and_shared_dependencies_are_frozen_and_relocatable_test() {
   let assert Ok(names) =
     simplifile.read_directory(path.join(
       snapshot.root(frozen),
-      ".gleam_mutants/dependencies",
+      ".smolmut/dependencies",
     ))
   assert list.sort(names, string.compare)
     == ["left", "right", "shared", "support"]
@@ -85,7 +85,7 @@ pub fn transitive_and_shared_dependencies_are_frozen_and_relocatable_test() {
       "left",
       "path",
     ])
-    == Ok(".gleam_mutants/dependencies/left")
+    == Ok(".smolmut/dependencies/left")
   assert tomlet.get_string(
       config(dependency_path(snapshot.root(frozen), "left")),
       ["dependencies", "shared", "path"],
@@ -143,10 +143,7 @@ pub fn dependency_changes_invalidate_identity_and_kept_copies_drop_removed_files
     )
   let assert Ok(last) = snapshot.keep(source, destination, [])
   let assert Ok(_) = local_dependencies.prepare(source, last, [])
-  assert simplifile.is_directory(path.join(
-      destination,
-      ".gleam_mutants/dependencies",
-    ))
+  assert simplifile.is_directory(path.join(destination, ".smolmut/dependencies"))
     == Ok(False)
   let assert Ok(Nil) = platform.delete_tree(root)
 }

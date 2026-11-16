@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use crate::fragment::{bind, choice, natural, scalar_literal};
@@ -63,8 +63,8 @@ pub fn derive_plan(source: &str) -> Result<String, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    const OPERATOR: &str = include_str!("../../src/gleam_mutants/core/operator.gleam");
-    const PLAN: &str = include_str!("../../src/gleam_mutants/core/plan.gleam");
+    const OPERATOR: &str = include_str!("../../src/smolmut/core/operator.gleam");
+    const PLAN: &str = include_str!("../../src/smolmut/core/plan.gleam");
 
     #[test]
     fn derives_operator_inventory_names_and_versions() {

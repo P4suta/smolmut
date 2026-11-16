@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -7,14 +7,14 @@ import os from "node:os";
 import path from "node:path";
 
 const root = process.cwd();
-const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "gleam-mutants-tree-"));
+const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "smolmut-tree-"));
 const wait = milliseconds => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 
 function command(runtime, marker) {
   if (runtime === "erlang") return ["gleam", ["run", "-m", "process_tree_smoke", "--target", "erlang", "--", marker]];
   if (runtime === "node") return ["gleam", ["run", "-m", "process_tree_smoke", "--target", "javascript", "--runtime", "node", "--", marker]];
-  const main = path.join(root, "build", "dev", "javascript", "gleam_mutants", "gleam@@private_main_v1.19.2.mjs");
-  if (runtime === "deno") return ["deno", ["run", "--allow-read", "--allow-run", "--allow-env=GLEAM_MUTANTS_ACTIVE,GLEAM_MUTANTS_RUNTIME", main, marker]];
+  const main = path.join(root, "build", "dev", "javascript", "smolmut", "gleam@@private_main_v1.19.2.mjs");
+  if (runtime === "deno") return ["deno", ["run", "--allow-read", "--allow-run", "--allow-env=SMOLMUT_ACTIVE,SMOLMUT_RUNTIME", main, marker]];
   return ["bun", ["run", main, marker]];
 }
 

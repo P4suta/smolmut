@@ -1,15 +1,15 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/json
 import gleam/option.{None}
 import gleam/string
-import gleam_mutants/core/mutant.{Candidate}
-import gleam_mutants/core/score
-import gleam_mutants/core/span
-import gleam_mutants/report
-import gleam_mutants/stryker_report.{SourceFile}
-import gleam_mutants/types.{
+import smolmut/core/mutant.{Candidate}
+import smolmut/core/score
+import smolmut/core/span
+import smolmut/report
+import smolmut/stryker_report.{SourceFile}
+import smolmut/types.{
   Erlang, Killed, MutantResult, Node, PolicySummary, RejectedMutant, RunReport,
   RuntimeOutcome, SelectionSummary, Survived, TestError, TimedOut,
 }

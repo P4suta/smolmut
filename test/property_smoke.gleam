@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/int
 import gleam/result
 import gleam/string
-import gleam_mutants/core/bytes
-import gleam_mutants/core/glob
-import gleam_mutants/core/span
-import gleam_mutants/platform
+import smolmut/core/bytes
+import smolmut/core/glob
+import smolmut/core/span
+import smolmut/platform
 
 pub fn main() {
   let #(cases, seed) = case platform.arguments() {

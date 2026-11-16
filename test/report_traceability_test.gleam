@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/dynamic/decode
@@ -8,11 +8,11 @@ import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/core/mutant
-import gleam_mutants/core/score
-import gleam_mutants/core/span
-import gleam_mutants/types
+import smolmut/api
+import smolmut/core/mutant
+import smolmut/core/score
+import smolmut/core/span
+import smolmut/types
 
 pub fn native_reports_preserve_error_reasons_and_distinguish_empty_messages_test() {
   let cases = [

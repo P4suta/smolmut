@@ -1,37 +1,37 @@
-# SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+# SPDX-FileCopyrightText: 2026 smolmut contributors
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
-name = "gleam_mutants"
+name = "smolmut"
 # x-release-please-start-version
 version = "0.1.0"
 # x-release-please-end
 gleam = ">= 1.17.0 and < 2.0.0"
 internal_modules = [
-  "gleam_mutants/cache",
-  "gleam_mutants/capability",
-  "gleam_mutants/cli",
-  "gleam_mutants/config",
-  "gleam_mutants/core/*",
-  "gleam_mutants/engine",
-  "gleam_mutants/error",
-  "gleam_mutants/local_dependencies",
-  "gleam_mutants/mte_asset",
-  "gleam_mutants/pipeline",
-  "gleam_mutants/platform",
-  "gleam_mutants/project_report",
-  "gleam_mutants/report",
-  "gleam_mutants/runtime",
-  "gleam_mutants/snapshot",
-  "gleam_mutants/stryker_html",
-  "gleam_mutants/stryker_report",
-  "gleam_mutants/test_impact",
-  "gleam_mutants/version",
-  "gleam_mutants/workspace_lock",
+  "smolmut/cache",
+  "smolmut/capability",
+  "smolmut/cli",
+  "smolmut/config",
+  "smolmut/core/*",
+  "smolmut/engine",
+  "smolmut/error",
+  "smolmut/local_dependencies",
+  "smolmut/mte_asset",
+  "smolmut/pipeline",
+  "smolmut/platform",
+  "smolmut/project_report",
+  "smolmut/report",
+  "smolmut/runtime",
+  "smolmut/snapshot",
+  "smolmut/stryker_html",
+  "smolmut/stryker_report",
+  "smolmut/test_impact",
+  "smolmut/version",
+  "smolmut/workspace_lock",
 ]
 
 description = "Mutation testing for Gleam across Erlang, Node, Deno, and Bun"
 licences = ["MIT", "Apache-2.0"]
-repository = { type = "github", user = "P4suta", repo = "gleam-mutants" }
+repository = { type = "github", user = "P4suta", repo = "smolmut" }
 
 [[documentation.pages]]
 title = "Library API"
@@ -77,21 +77,21 @@ allow_read = true
 allow_run = true
 allow_write = true
 
-[tools.gleam_mutants]
+[tools.smolmut]
 version = 1
 
-[tools.gleam_mutants.cache]
+[tools.smolmut.cache]
 mode = "auto"
 
-[tools.gleam_mutants.execution]
+[tools.smolmut.execution]
 test_selection = "auto"
 
-[tools.gleam_mutants.policy]
+[tools.smolmut.policy]
 strict = false
 minimum_score = 100
 require_mutants = true
 
-[tools.gleam_mutants.report]
+[tools.smolmut.report]
 directory = "reports/mutation"
 formats = ["json", "html"]
 history = true

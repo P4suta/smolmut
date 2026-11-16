@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::fs;
@@ -25,10 +25,8 @@ fn compiler_interruption_returns_to_the_api_on_every_runtime() {
         .duration_since(UNIX_EPOCH)
         .expect("clock")
         .as_nanos();
-    let directory = std::env::temp_dir().join(format!(
-        "gleam-mutants-compiler-{}-{nonce}",
-        std::process::id()
-    ));
+    let directory =
+        std::env::temp_dir().join(format!("smolmut-compiler-{}-{nonce}", std::process::id()));
     fs::create_dir(&directory).expect("owned fixture directory");
     fs::copy(
         env!("CARGO_BIN_EXE_compiler_exit_fixture"),
@@ -62,7 +60,7 @@ fn compiler_interruption_returns_to_the_api_on_every_runtime() {
             let result = command
                 .current_dir(root)
                 .env("PATH", &path)
-                .env("GLEAM_MUTANTS_INTERRUPT_CODE", code.to_string())
+                .env("SMOLMUT_INTERRUPT_CODE", code.to_string())
                 .output()
                 .expect("API host");
             let stdout = String::from_utf8_lossy(&result.stdout);

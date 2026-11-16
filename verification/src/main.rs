@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 mod bridge;
@@ -8,7 +8,7 @@ mod filesystem_entry;
 mod limits;
 mod supervisor;
 
-use gleam_mutants_verification::{fragment, outcome, paths, scoring, selection, span};
+use smolmut_verification::{fragment, outcome, paths, scoring, selection, span};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -16,8 +16,8 @@ use std::process::{Command, ExitCode, Output};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-const SOURCE: &str = "src/gleam_mutants/core/limits.gleam";
-const ENTRY_SOURCE: &str = "src/gleam_mutants/core/filesystem_entry.gleam";
+const SOURCE: &str = "src/smolmut/core/limits.gleam";
+const ENTRY_SOURCE: &str = "src/smolmut/core/filesystem_entry.gleam";
 struct Contract {
     theorem: &'static str,
     predicate: &'static str,
@@ -193,10 +193,7 @@ fn bounded(image: &str, directory: &Path, args: &[&str]) -> Result<Output, Strin
         .map_err(|e| e.to_string())?
         .as_nanos();
     let sequence = CONTAINER_SEQUENCE.fetch_add(1, Ordering::Relaxed);
-    let name = format!(
-        "gleam-mutants-proof-{}-{nonce}-{sequence}",
-        std::process::id()
-    );
+    let name = format!("smolmut-proof-{}-{nonce}-{sequence}", std::process::id());
     let mut command = Command::new("docker");
     command
         .args([
@@ -462,15 +459,15 @@ fn run() -> Result<(), String> {
         }
         [] => {
             println!(
-                "usage: gleam-mutants-verification derive OUTPUT_DIRECTORY | prove\nRun from the repository root; prove needs Docker and uses offline 2-CPU, 2-GiB containers."
+                "usage: smolmut-verification derive OUTPUT_DIRECTORY | prove\nRun from the repository root; prove needs Docker and uses offline 2-CPU, 2-GiB containers."
             );
             Ok(())
         }
         [flag] if flag == "--help" => {
-            println!("usage: gleam-mutants-verification derive OUTPUT_DIRECTORY | prove");
+            println!("usage: smolmut-verification derive OUTPUT_DIRECTORY | prove");
             Ok(())
         }
-        _ => Err("usage: gleam-mutants-verification derive OUTPUT_DIRECTORY | prove".into()),
+        _ => Err("usage: smolmut-verification derive OUTPUT_DIRECTORY | prove".into()),
     }
 }
 

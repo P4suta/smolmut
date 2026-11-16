@@ -1,9 +1,7 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-// A deliberately under-tested module: every function below keeps at least one
-// survivor alive under `test/boundary_test.gleam`, and each one exercises a
-// different branch of the suggestion probe.
+// A deliberately under-tested module: every function below keeps at least one survivor alive under `test/boundary_test.gleam`, and each one exercises a different branch of the suggestion probe.
 
 import gleam/option.{type Option, None, Some}
 import gleam/string
@@ -51,21 +49,16 @@ pub fn uses_helper(x: Int) -> Int {
   helper(x)
 }
 
-/// Takes a function, which is generated as one that ignores what it is given
-/// and answers a generated value. The `+ 0` is what gives the function-typed
-/// parameter a mutant to report at all — and it is an equivalent one, so this
-/// function also stands for a survivor that survives on its own merits.
+/// Takes a function, which is generated as one that ignores what it is given and answers a generated value.
+/// The `+ 0` is what gives the function-typed parameter a mutant to report at all — and it is an equivalent one, so this function also stands for a survivor that survives on its own merits.
 pub fn applies(f: fn(Int) -> Int, x: Int) -> Int {
   f(x) + 0
 }
 
 /// Holds a mutant that does not type check, beside one that does.
 ///
-/// Deleting the pipeline stage leaves `parts`, a `List(String)`, where the
-/// annotation promises a `String`: the compiler rejects it, exactly as `run`
-/// rejects it. Turning the separator into `""` is a perfectly good mutant on
-/// the very same line, and the one the probe has to keep reporting on — a
-/// single mutant nobody can build must not take the whole file down.
+/// Deleting the pipeline stage leaves `parts`, a `List(String)`, where the annotation promises a `String`: the compiler rejects it, exactly as `run` rejects it.
+/// Turning the separator into `""` is a perfectly good mutant on the very same line, and the one the probe has to keep reporting on — a single mutant nobody can build must not take the whole file down.
 pub fn join(parts: List(String)) -> String {
   parts
   |> string.join("; ")

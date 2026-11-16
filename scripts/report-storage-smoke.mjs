@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 
 const root = process.cwd();
-const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "gleam mutants reports "));
+const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "smolmut reports "));
 
 function makeProject(directory) {
   fs.mkdirSync(path.join(directory, "src"), { recursive: true });

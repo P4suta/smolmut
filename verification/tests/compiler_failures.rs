@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::fs;
@@ -29,7 +29,7 @@ fn compiler_infrastructure_failure_never_becomes_a_rejected_mutant() {
         .expect("clock")
         .as_nanos();
     let directory = std::env::temp_dir().join(format!(
-        "gleam-mutants-compiler-failure-{}-{nonce}",
+        "smolmut-compiler-failure-{}-{nonce}",
         std::process::id()
     ));
     fs::create_dir(&directory).expect("owned fixture directory");
@@ -67,9 +67,9 @@ fn compiler_infrastructure_failure_never_becomes_a_rejected_mutant() {
             let result = command
                 .current_dir(root)
                 .env("PATH", &path)
-                .env("GLEAM_MUTANTS_REAL_COMPILER", &gleam)
-                .env("GLEAM_MUTANTS_COMPILER_COUNTER", &counter)
-                .env("GLEAM_MUTANTS_COMPILER_FAILURE_CODE", code.to_string())
+                .env("SMOLMUT_REAL_COMPILER", &gleam)
+                .env("SMOLMUT_COMPILER_COUNTER", &counter)
+                .env("SMOLMUT_COMPILER_FAILURE_CODE", code.to_string())
                 .output()
                 .expect("API host");
             let stdout = String::from_utf8_lossy(&result.stdout);

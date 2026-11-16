@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 use std::collections::BTreeMap;
@@ -240,7 +240,7 @@ mod tests {
 
     #[test]
     fn refuses_changed_public_domains_and_extracts_exact_type_boundaries() {
-        const TYPES: &str = include_str!("../../src/gleam_mutants/types.gleam");
+        const TYPES: &str = include_str!("../../src/smolmut/types.gleam");
         validate_types(TYPES).unwrap();
         assert!(validate_types(&TYPES.replace("  TimedOut\n", "  TimedOut\n  Unknown\n")).is_err());
         assert!(validate_types(&TYPES.replace("message: String", "message: Int")).is_err());

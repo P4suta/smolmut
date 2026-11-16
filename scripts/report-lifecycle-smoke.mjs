@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import childProcess from "node:child_process";
@@ -8,7 +8,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const fixture = path.join(root, "fixtures", "basic_project");
-const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "gleam mutants lifecycle "));
+const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "smolmut lifecycle "));
 
 function project(mode) {
   const directory = path.join(temporary, mode);
@@ -41,7 +41,7 @@ try {
   const runtime = project("runtime");
   fs.writeFileSync(
     path.join(runtime, "mutant-test-command.mjs"),
-    "if (process.env.GLEAM_MUTANTS_ACTIVE) { console.error('runtime boom'); process.exit(2); }\n",
+    "if (process.env.SMOLMUT_ACTIVE) { console.error('runtime boom'); process.exit(2); }\n",
   );
   run("runtime", runtime);
   console.log("report lifecycle covers baseline preservation, zero mutants, strict failure, and RuntimeError");

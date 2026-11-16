@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/io
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import gleam_mutants/api
-import gleam_mutants/types
+import smolmut/api
+import smolmut/types
 
 const expected_mutants = 50
 
@@ -98,7 +98,7 @@ pub fn main() -> Nil {
   let options =
     types.Options(
       ..api.default_options(),
-      includes: ["src/gleam_mutants/core/score.gleam"],
+      includes: ["src/smolmut/core/score.gleam"],
       strict: Some(True),
       jobs: Some(workers),
       test_selection: Some(types.TestSelectionFull),

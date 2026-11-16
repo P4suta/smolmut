@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2026 gleam_mutants contributors
+// SPDX-FileCopyrightText: 2026 smolmut contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 import gleam/list
 import gleam/result
-import gleam_mutants/types.{
+import smolmut/types.{
   BooleanConnective, BooleanLiteral, BooleanNegation, ComparisonBoundary,
   ConcatenationOperand, Equality, FloatArithmetic, FloatNeutral,
   IntegerArithmetic, IntegerNegation, IntegerNeutral, ListNeutral, OptionNeutral,
