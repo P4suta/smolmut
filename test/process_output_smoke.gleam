@@ -19,7 +19,8 @@ import tomlet
 
 const byte_values = 256
 
-const reference_script = "const first = Number(process.argv[1]);"
+const reference_script =
+  "const first = Number(process.argv[1]);"
   <> "const bytes = Buffer.from(Array.from({length: 256}, (_, second) => [first, second, 124]).flat());"
   <> "require('node:fs').writeFileSync(process.argv[2], bytes.toString('utf8'));"
   <> "process.stdout.write(bytes);"

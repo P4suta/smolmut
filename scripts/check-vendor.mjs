@@ -29,7 +29,7 @@ if (provenance.version !== version || provenance.bundleSha256 !== sha256) {
 }
 if (
 	!assetSource.includes(
-		`pub const npm_integrity = "${provenance.npmIntegrity}"`,
+		`pub const npm_integrity =\n  "${provenance.npmIntegrity}"`,
 	)
 ) {
 	throw new Error("Generated MTE module integrity metadata mismatch");

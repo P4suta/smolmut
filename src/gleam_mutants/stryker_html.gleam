@@ -8,7 +8,8 @@ import gleam/string
 import gleam_mutants/core/bytes
 import gleam_mutants/mte_asset
 
-const bootstrap = "(()=>{const app=document.querySelector(\"mutation-test-report-app\");const data=document.getElementById(\"mutation-test-report-data\");app.report=JSON.parse(data.textContent);})();"
+const bootstrap =
+  "(()=>{const app=document.querySelector(\"mutation-test-report-app\");const data=document.getElementById(\"mutation-test-report-data\");app.report=JSON.parse(data.textContent);})();"
 
 pub fn render(report_json: String) -> Result(String, String) {
   use bundle <- result.try(

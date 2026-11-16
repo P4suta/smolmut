@@ -13,7 +13,7 @@ const wait = milliseconds => Atomics.wait(new Int32Array(new SharedArrayBuffer(4
 function command(runtime, marker) {
   if (runtime === "erlang") return ["gleam", ["run", "-m", "process_tree_smoke", "--target", "erlang", "--", marker]];
   if (runtime === "node") return ["gleam", ["run", "-m", "process_tree_smoke", "--target", "javascript", "--runtime", "node", "--", marker]];
-  const main = path.join(root, "build", "dev", "javascript", "gleam_mutants", "gleam@@private_main_v1.18.1.mjs");
+  const main = path.join(root, "build", "dev", "javascript", "gleam_mutants", "gleam@@private_main_v1.19.2.mjs");
   if (runtime === "deno") return ["deno", ["run", "--allow-read", "--allow-run", "--allow-env=GLEAM_MUTANTS_ACTIVE,GLEAM_MUTANTS_RUNTIME", main, marker]];
   return ["bun", ["run", main, marker]];
 }
