@@ -12,37 +12,35 @@ The current package version is 0.1.0.
 
 ## Install
 
-Add the Hex package to the target project's development dependencies:
+Clone the source repository and install its pinned development tools:
 
 ```sh
-gleam add --dev smolmut
+git clone https://github.com/P4suta/smolmut.git
+cd smolmut
+mise run bootstrap
 ```
 
-Then use its CLI module:
+Add the checkout to the target project's development dependencies in `gleam.toml`:
+
+```toml
+[dev_dependencies]
+smolmut = { path = "../smolmut" }
+```
+
+Adjust the relative path to the checkout location.
+From the target project, download dependencies and run the CLI:
 
 ```sh
+gleam deps download
 gleam run -m smolmut -- run
-```
-
-The npm package exposes the same CLI for JavaScript projects:
-
-```sh
-npm install --global smolmut
-smolmut --version
-```
-
-For the Erlang escript, download `smolmut.escript` and `SHA256SUMS` from the matching [GitHub Release](https://github.com/P4suta/smolmut/releases).
-Verify the escript's SHA-256 against its checksum entry, then run:
-
-```sh
-escript ./smolmut.escript --version
 ```
 
 See the [library guide](library.md) for typed embedding.
 
 ## Supported environments
 
-The existing 0.1 support window is Gleam 1.17–1.18, Erlang/OTP 27–29, Node.js 22/24 LTS, Deno 2.9 LTS, and Bun 1.2–1.3.
+The 0.1 support window covers Gleam 1.17–1.19 and Erlang/OTP 27–29.
+Supported JavaScript runtimes are Node.js 22/24, Deno 2.9, and Bun 1.2–1.3.
 Tier 1 platforms are Linux, Windows 11/Server 2022, and macOS 13.5 or newer.
 x64 is supported on all three; arm64 is tested where a GitHub-hosted runner is available.
 Network filesystems and 32-bit operating systems are outside this boundary.
@@ -158,14 +156,10 @@ mise run test-faults
 mise run prove
 mise run dogfood
 mise run test-ecosystem
-mise run package
 ```
 
 The [verification contracts](verification.md) identify each check and its limits.
 Docker is required for the pinned, bounded proof environment.
-Packaging creates Hex, escript, npm, checksums, and CycloneDX SBOMs under `dist/`.
-It verifies installation, public API use, mutation runs, offline rendering, and reproducible checksums.
-It performs no publication.
 
 The ecosystem task fetches fixed official-library commits, uses four workers, and has a 13-minute operational deadline.
 It disables strict mode, history, project reports, and persistent cache and validates native report and source hashes.
@@ -181,6 +175,5 @@ The output is `test-results/ecosystem-summary.json`.
 | `javascript@b51b436` | `src/**/*.gleam` | Node / 30s | 6 / 2 / 4 | 1 / 1 |
 
 Expected survivors are compatibility evidence.
-The protected release gates require these golden outcomes and the complete operating-system, host, and target matrix.
-Hosted-only permissions, signatures, publication, and other operating systems require their own release evidence.
+The [release guide](releasing.md) describes manual publication.
 See the [migration guide](migration.md), [configuration](configuration.md), [operators](operators.md), and [architecture](architecture.md).

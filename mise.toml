@@ -10,8 +10,6 @@ deno = "2.9.5"
 bun = "1.3.14"
 rust = { version = "1.99.1", components = "clippy,rustfmt" }
 "cargo:cargo-audit" = "0.22.2"
-syft = "1.51.0"
-grype = "0.116.1"
 uv = "0.12.0"
 lefthook = "2.1.9"
 committed = "1.1.11"
@@ -105,13 +103,24 @@ run = [
   "node scripts/check-package-information.mjs",
   "node scripts/check-errors.mjs",
   "node scripts/check-schema.mjs",
+  "mise run audit-fuzz",
+]
+
+[tasks.audit-fuzz]
+description = "Audit fuzz dependencies against the pinned RustSec snapshot"
+run = [
+  "git init --quiet build/rustsec",
+  "git -C build/rustsec fetch --depth=1 https://github.com/RustSec/advisory-db.git 40f5be6fb12ed93fc591bf4ab23b7d793b3f2239",
+  "git -C build/rustsec checkout --detach 40f5be6fb12ed93fc591bf4ab23b7d793b3f2239",
+  "test \"$(git -C build/rustsec rev-parse HEAD)\" = 40f5be6fb12ed93fc591bf4ab23b7d793b3f2239",
+  "rustsec_state=$(git -C build/rustsec status --porcelain --untracked-files=all) && test -z \"$rustsec_state\"",
+  "cargo audit --file fuzz/Cargo.lock --db build/rustsec --no-fetch",
 ]
 
 [tasks.check]
-description = "Run all local release-readiness checks"
+description = "Run project checks"
 run = [
   "mise run check-verification",
-  "mise run check-release",
   "mise run fmt",
   "mise run build",
   "mise run test",
@@ -131,30 +140,6 @@ run = [
 description = "Prove source-derived predicates and reject each broken contract in bounded containers"
 run = "cargo run --locked --manifest-path verification/Cargo.toml --target-dir build/verification-rust -- prove"
 
-[tasks.check-release]
-description = "Check release identities, candidate evidence, and denied publication paths"
-run = [
-  "cargo fmt --all --manifest-path tools/Cargo.toml --check",
-  "cargo clippy --locked --workspace --manifest-path tools/Cargo.toml --target-dir build/release-rust --all-targets -- -D warnings",
-  "cargo test --locked --workspace --manifest-path tools/Cargo.toml --target-dir build/release-rust",
-]
-
-[tasks.release]
-description = "Inspect or prepare a candidate without signing, tagging, or publishing"
-run = "cargo run --locked --manifest-path tools/release/Cargo.toml --target-dir build/release-runner --"
-
-[tasks.prove-release]
-description = "Prove release decisions in bounded Kani containers and reject broken controls"
-run = "mise run release prove"
-
-[tasks.scan-sboms]
-description = "Assess every distribution SBOM for known High/Critical vulnerabilities"
-run = "node scripts/scan-sboms.mjs"
-
-[tasks.audit-tools]
-description = "Audit locked release dependencies against the pinned RustSec revision"
-run = "mise run release audit-tools"
-
 [tasks.test-minimum]
 description = "Check the declared minimum Gleam and Node versions and the current compiler on Node 20"
 run = [
@@ -169,10 +154,6 @@ run = [
 description = "Require all 50 score mutants to fail the full unit suite without cached or inconclusive outcomes"
 timeout = "15m"
 run = "gleam run -m dogfood_smoke --target erlang"
-
-[tasks.package]
-description = "Build and smoke-test development snapshot Hex, escript, and npm artifacts"
-run = "node scripts/verify-package.mjs"
 
 [tasks.test-property]
 description = "Run 10,000 deterministic UTF-8 span, path, glob, and decoder properties"
@@ -193,15 +174,6 @@ run = "node scripts/benchmark.mjs"
 [tasks.test-ecosystem]
 description = "Mutation-test five fixed official Gleam corpora with a 13-minute deadline"
 run = "node scripts/ecosystem-smoke.mjs"
-
-[tasks.release-candidate]
-description = "Verify already-built development snapshot artifacts without publishing"
-run = [
-  "mise run prove",
-  "mise run prove-release",
-  "mise run release check-dist dist",
-  "mise run scan-sboms",
-]
 
 [tasks.hooks]
 description = "Install git hooks"

@@ -5,13 +5,15 @@ Mutation testing for Gleam through a library and CLI.
 ## Installation
 
 ```sh
-gleam add --dev smolmut
+git clone https://github.com/P4suta/smolmut.git
+cd smolmut
+mise run bootstrap
 ```
 
 ## Usage
 
 ```sh
-gleam run -m smolmut -- run
+mise x -- gleam run -m smolmut -- --help
 ```
 
 ## Documentation

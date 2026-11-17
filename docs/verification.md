@@ -153,7 +153,6 @@ Reassess this boundary when a maintained verifier can import the relevant Gleam 
 | Diagnostic traceability | Native report projection and schemas | Every outcome category preserves its optional error reason; empty, Unicode, control-character, and escaped messages round-trip through JSON |
 | Diagnostic privacy | Execution results and report projections | Real failing processes exercise none, errors, and all modes; suppressed text is absent from API outcomes, native JSON, and Stryker JSON on four runtimes |
 | Public package boundary | Package configuration and runtime generator | Exact public-module inventory; generated runtimes preserve explicit, empty, and default internal-module patterns; ordinary tests and mutation dogfood run the same gate |
-| Report persistence | API and report adapters | Default no-write and explicit persistence; installed Hex consumer and report storage faults |
 | Host preservation | Process FFI, engine, CLI | Child exit 130/143 during compilation, baseline, and mutation batches on all four runtimes; API continuation and CLI exit |
 | Process text | Process FFI and report serialization | UTF-8 boundary vectors, BOM preservation, all 65,536 two-byte inputs against Node's replacement decoder, truncated multibyte output, and actual API report serialization on four runtimes |
 | Input preservation | Snapshot and instrumenter | Byte digests, spaces, Unicode/CRLF, link rejection, generated-link cleanup, 10,000 fixed-seed properties |
@@ -164,7 +163,6 @@ Reassess this boundary when a maintained verifier can import the relevant Gleam 
 | Baseline and aggregation | Execution and outcome core | Baseline failure returns an error; all 341 outcome-category lists of length zero through four match an independent priority reference |
 | Selection and cache | Engine, impact protocol, cache | Automatic and full-suite parity, conservative confirmation, all-hit behavior, runtime/compiler identity, source file permissions, and external dependency contents |
 | Cleanup and durability | Snapshots, locks, report storage | Source-derived file-link admission; retained-copy file, directory, root symlink, and hard-link refusal; read-only snapshot disposal and external-link permission preservation; process-tree, interruption, workspace-lock, report lifecycle, and storage fault smokes |
-| Consumer compatibility | CLI and artifacts | Schema validation, four-runtime report parity, offline browsers, installed Hex API, escript/npm execution, reproducible packages |
 | Mutation semantics | Core and engine | Dogfood score mutation and five fixed official-library corpora with exact expected outcomes and source hashes |
 | Assurance completeness | Score dogfood runner | Exact admitted and rejected candidate identities, fresh single-runtime measurements, and negative controls for missing, duplicated, cached, timed-out, erroneous, and inconsistent results |
 
@@ -201,85 +199,8 @@ These checks cover that finite corpus and the native boundaries; symlink aliases
 
 ## Gates
 
-Release automation has a separate pure Rust core in `tools/release-core`.
-`mise run prove-release` imports that implementation directly into pinned Kani 0.68.0.
-Nine harnesses check output reuse, finalization, conclusive runtime counts, release identity selection, draft acquisition, phase capabilities, bounded publication readback, suppressed proposal CI, and package name admission.
-They cover every admitted Boolean or enum state and all `u64` count and release-ID combinations in those predicates.
-Release selection admits only nonzero IDs, preserves the first match, and refuses another match even when both IDs are equal.
-Its harness checks every selection transition and reachability of the missing, unique, and ambiguous states.
-The same identity harness checks every `u64` controller run and `u32` attempt, requiring both to be nonzero and preserving both fields.
-The production constructor stores the checked values as `NonZeroU64` and `NonZeroU32`.
-The phase harness quantifies over all four publication phases and checks the production callback dispatcher.
-Hex and npm invoke only the completed-preparation reader; draft and finalization select the GitHub release reader.
-Both branches must be reachable, and each dispatch invokes exactly one reader.
-The acquisition harness calls the production generic dispatcher with arbitrary discovery and creation results.
-It checks exactly one discovery, no creation after an existing result or discovery error, one creation for a missing target, exact identity preservation, and error propagation without another discovery or write.
-The callback types permit only one invocation per operation.
-The readback harness checks every first terminal position within the production loop's fixed budget of 31 reads.
-Matching bytes, conflicts, and read errors stop immediately without a later read or wait.
-Persistent absence consumes the full budget with 30 waits and returns missing rather than success.
-The adapter supplies registry reads and a 30-second sleep between attempts after one completed npm publish.
-The proof checks callback results and invocation counts, not provider availability or elapsed time.
-The package name harness checks every byte string of up to 17 bytes, which reaches past the 16-byte `gleam_community_` prefix.
-An admitted name matches the Hex name format and never starts with `gleam_` unless it starts with `gleam_community_`.
-`gleam publish` asks for the core team password before publishing a `gleam_` name, and the Hex API applies no such check to a direct upload.
-A release test requires `gleam.toml` to declare the release tool's package name, and `check-dist` refuses a name the policy rejects.
-The gate requires nine successful harnesses and separately rejects ten deliberately broken implementations at the corresponding harness.
-Each negative control selects only its named harness and requires its exact failed-harness summary.
-Tool failure, an empty harness inventory, or a resource stop supplies no proof result.
-The pinned container uses the same bounded supervisor as the Gleam proof gate and records its actual source hash.
-These proofs establish the core predicates under Kani's Rust model; they do not verify external I/O or provider semantics.
-
-`mise run check-release` runs strict Rust formatting, Clippy, unit and CLI tests, and the preserved publication-phase and controller-identity fuzz corpus with round-trip properties.
-The cargo-fuzz target is `fuzz/fuzz_targets/publication_phase.rs`.
-Native regressions cover sealed candidate tampering, missing evidence, source and attempt mismatches, latest-job invalidation, artifact selection, denied local publication, conflicting assets, and recovery after partial uploads.
-Draft discovery uses the complete paginated [GitHub release catalogue](https://docs.github.com/en/rest/releases/releases#list-releases), since the release-by-tag endpoint returns published releases.
-Native protocol regressions cover a missing published-tag response with an existing draft, exact selection after unrelated records, malformed or duplicated identities, transport failures, and refusal of published targets.
-Draft acquisition retains the validated creation response, including when a collection read would omit the new entry.
-An optional explicit draft ID supports recovery without collection discovery and must pass a canonical ID read and candidate-tag validation.
-Asset uploads and final publication address that ID directly, and the draft job exports it only after complete asset readback.
-Workflow regressions reject a substituted or overridden draft ID at the final job.
-Native HTTP fixtures run the actual pinned `gh` client with isolated authentication state against a loopback server.
-They check JSON creation and response handling, binary upload bytes, query escaping, denied requests, and malformed successful responses.
-These fixtures cover the client protocol and controlled responses, not production permissions, TLS, provider visibility, or cross-provider atomicity.
-The npm configuration control invokes the actual client with the publication option builder and `config get provenance-file --offline`.
-It verifies selection of the retained bundle and rejects an explicit conflicting `--provenance=false` option.
-The readiness and production registry plan both require this check before authorizing an npm write.
-The probe clears inherited environment and configuration, uses an isolated prefix, and receives no registry credential.
-This is a required native alternative for the external npm JavaScript configuration semantics and `std::process::Command`, which the `no_std` Kani core doesn't model.
-The unchanged phase, acquisition, reuse, and finalization predicates retain their source-bound proofs.
-Reassess this boundary if option selection gains another provenance mode or a supported verifier covers the upstream client's configuration implementation.
-The tag reference remains authoritative for the candidate source; a draft's `target_commitish` may name a branch.
-GitHub hides draft releases from tokens without push authority.
-Registry phases instead read the successful draft job from their active controller run through Actions read permission.
-Native handoff regressions reject foreign controller fields, absent or ambiguous producers, transport failure, and later failed or skipped producers.
-A producer from an earlier attempt is reusable only while it remains the latest successful named job in the same controller source and run.
-This is evidence about completed preparation, not a claim that a read-only token can inspect the current draft.
-Finalization reads the complete current draft and both registry archives again before publication.
-
-The fast release check parses the actual publication YAML with pinned YAML 1.2 tooling and compares its phase permissions with the production evidence routes.
-It also checks the complete job inventory, protected environments, candidate argument bindings, readiness dependencies, and failure propagation.
-Negative controls reject authority drift, skipped or ignored prerequisites, removal of readiness, secret references in evidence jobs, and changed candidate or producer identities.
-The hosted read-only `registry-ready` job executes the same registry planning function as publication without registry credentials before either registry approval becomes available.
-GitHub's execution, token permissions, truthful job metadata, YAML interpretation, and external provider availability remain trust assumptions.
-These checks do not prove an external service or an atomic transaction across registries.
-The pinned GitHub CLI checks the attestation adapter's arguments for SHA-256 and SHA-512 with online and retained-bundle modes.
-A malformed custom trust root must fail with the expected parsing error after argument admission.
-The test uses isolated configuration and a placeholder token without network access.
-The candidate workflow separately requires real retained and online provenance verification with the exact certificate identity, source and signer digests, protected ref, and hosted runner restriction.
-GitHub CLI and Sigstore verification remain external trust assumptions.
-Proposal CI regressions reject foreign metadata and human approval cases, preserve active or failed runs, and constrain dispatch to the internal bot's version files and exact source.
-The protected preparation workflow formats the generated changelog with pinned rumdl before checking CI.
-It creates a single-file commit from the inspected proposal source, updates only the fixed bot branch without force, and checks CI at the resulting source.
-A native formatter regression checks known entries, blank lines, list markers, empty-input refusal, and idempotence.
-Dispatch checks the actual Git branch reference, object type, and exact source after formatting, while the CI workflow checks that source again before checkout.
-The PR response still supplies proposal identity but no longer serves as the execution reference after a branch update.
-GitHub's event suppression and workflow execution remain external assumptions that require live verification.
-`mise run audit-tools` checks the release and fuzz dependency lockfiles against the exact RustSec commit in `tools/release/rustsec.commit`.
-Review upstream advisory changes and update that full commit explicitly to renew the shared audit snapshot.
-
 `mise run check` runs compilation, unit tests, documentation, metadata, dependency/security checks, and Rust derivation checks.
-`mise run test-integration`, `test-matrix`, `test-property`, `test-faults`, `dogfood`, `test-ecosystem`, and `package` exercise the native obligations above.
+`mise run test-integration`, `test-matrix`, `test-property`, `test-faults`, `dogfood`, and `test-ecosystem` exercise the native boundaries.
 Properties use 10,000 cases and seed 24301.
 The ecosystem corpus identities and expected outcomes are fixed in the maintained runner.
 Score dogfood requires all 50 compiler-admitted candidates to fail the complete Erlang unit suite without cached outcomes.
@@ -292,8 +213,9 @@ Timeouts and execution errors leave this assurance inconclusive, even when the p
 The per-mutant limit is one minute, and the campaign limit is 15 minutes with two workers.
 Deadlines only stop resource use and never establish a passing verdict.
 
-The manual candidate workflow runs the complete inventory on its exact protected-main source and records fourteen Linux gates and eighteen checks on each of three operating systems.
-The publication workflow verifies those retained receipts and bytes instead of rebuilding packages.
-The [release guide](releasing.md) defines source, producer-attempt, provenance, and approval checks.
-A skipped, empty, failed, or inconclusive required check leaves the corresponding obligation open.
-Local macOS results do not establish Linux or Windows behavior, hosted OIDC, signatures, or publication.
+The `core_source` fuzz target and preserved corpus cover the source-derivation parsers.
+The dependency-free Rust verifier remains separate from the published Gleam package.
+`mise run audit-fuzz` checks the remaining Rust dependencies using the immutable RustSec revision in `mise.toml`.
+Review the upstream advisory changes before updating that revision.
+Continuous integration runs `check` and `test-integration` in one Linux gate for pull requests.
+The [release guide](releasing.md) describes manual publication with the official Gleam command.

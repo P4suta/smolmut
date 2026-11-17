@@ -5,11 +5,7 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 
 # Library API
 
-Add the Hex package as a development dependency:
-
-```sh
-gleam add --dev smolmut
-```
+Add a source checkout as a development dependency using the [installation instructions](usage.md#install).
 
 Use the public API and its shared domain types:
 

@@ -3,8 +3,11 @@
 
 name = "smolmut"
 summary = "Mutation testing for Gleam through a library and CLI"
-install = "gleam add --dev smolmut"
-usage = "gleam run -m smolmut -- run"
+install = """
+git clone https://github.com/P4suta/smolmut.git
+cd smolmut
+mise run bootstrap"""
+usage = "mise x -- gleam run -m smolmut -- --help"
 documentation_index = true
 copyright = "Yasunobu"
 license = "MIT OR Apache-2.0"

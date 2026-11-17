@@ -6,13 +6,9 @@
 /build
 # A fixture built in place, which only a hand-run `gleam` in one leaves behind.
 /fixtures/*/build
-/dist
 /fuzz/target
 /fuzz/artifacts
 /.smolmut
-/.smartest
-/smolmut
-/smolmut.cmd
 erl_crash.dump
 node_modules
 /reports/

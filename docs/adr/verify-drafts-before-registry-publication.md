@@ -11,41 +11,31 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 
 ## Status
 
-Proposed.
+Superseded by [manual publication](publish-manually-with-gleam.md).
 
 ## Context
 
-The [candidate publication decision](publish-verified-candidate-artifacts.md) separates GitHub write authority from registry publication.
-GitHub's [release API](https://docs.github.com/en/rest/releases/releases#list-releases) hides drafts from tokens without push access.
-A registry phase with Contents read permission can't use draft lookup as its publication prerequisite.
-Local decision proofs omit that incompatibility unless their model includes phase operations and authority.
+GitHub hides draft releases from tokens without write access.
+Registry publication jobs used read-only GitHub tokens.
 
 ## Decision
 
-Keep draft creation and complete asset readback in the approved GitHub write phase.
-Registry phases verify that preparation through the successful named draft job in their own active protected controller run.
-Bind the handoff to repository and owner IDs, workflow, event, controller source, run, and producer attempt.
-Parse controller run and attempt through one pure boundary that returns nonzero identity types.
-Reject foreign, missing, ambiguous, incomplete, or later failed producers.
-An earlier successful producer remains usable for a partial rerun of the same controller source.
+Create and verify draft assets in a GitHub write phase.
+Registry jobs use the successful preparation job in their own controller run as evidence.
+Finalization reads the draft and registry archives again.
 
-Use one pure production dispatcher to select the draft evidence operation for each phase.
-Prove its reader selection and call counts with Kani.
-Parse the actual workflow in the fast gate and check its permissions, protected environments, candidate bindings, prerequisite graph, and failure propagation.
-Exercise the shared registry planning function in a read-only job after draft preparation and before registry approval.
-Finalization checks the current complete GitHub draft and both registry archives before making the release immutable.
+## Alternatives
 
-Giving GitHub write authority to registry jobs would weaken the separation of capabilities.
-Assuming that an invisible draft is absent would repeat the failed boundary assumption.
-A separate signed receipt would add another artifact and signer without removing the existing dependence on GitHub's job execution and metadata.
-These alternatives are rejected.
+Giving registry jobs GitHub write access would combine separate capabilities.
+Treating an invisible draft as absent would make discovery unsound.
 
 ## Consequences
 
-Registry jobs need no GitHub release authority, and their shared prerequisites run before access to registry secrets.
-The handoff attests to completed preparation rather than current draft visibility.
-GitHub's truthful metadata, successful execution of the attested controller, protected workflow source, and token semantics remain external assumptions.
-The workflow contract binds all phase commands to the same candidate inputs and rejects skipped or ignored preparation failures.
-External changes to a mutable draft remain possible before finalization; the final write phase checks its current bytes again.
-The design does not provide an atomic transaction across GitHub, Hex, and npm.
-The [verification contracts](../verification.md) define the proofs, native fault controls, and hosted readiness check.
+The controller needed validated run identities, job selection, and phase permissions.
+The successor removes that controller and uses manual publication.
+
+## Confirmation
+
+Native regressions checked the workflow and handoff.
+Kani checked the pure phase dispatcher.
+The successor defines verification after removal.

@@ -2,9 +2,7 @@
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 name = "smolmut"
-# x-release-please-start-version
 version = "0.1.0"
-# x-release-please-end
 gleam = ">= 1.17.0 and < 2.0.0"
 internal_modules = [
   "smolmut/cache",
