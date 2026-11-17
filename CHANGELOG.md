@@ -56,6 +56,10 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 
 ## Unreleased
 
+The automated release system and custom Hex, npm, and escript distribution builders have been removed.
+Future Hex publication uses `gleam publish` manually.
+Development uses a source checkout as described in the [usage guide](docs/usage.md).
+
 * Add a typed mutation-testing API sharing the CLI's engine and results.
 * Remove Smartest, automatic test generation, generation schemas, and the VS Code extension.
 * Remove `suggest`, standalone `explain`, `apply`, and `run --suggest`.
@@ -63,5 +67,3 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 * Reject empty runtime evidence during outcome aggregation.
 
 See the [migration guide](docs/migration.md) for removed modules, commands, and configuration.
-
-<!-- Release entries below are maintained by release-please. -->

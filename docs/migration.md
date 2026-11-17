@@ -7,22 +7,22 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 
 ## From gleam_mutants 0.1.0
 
-The package `gleam_mutants` is now `smolmut` on Hex and npm.
+The package and its modules are now named `smolmut`.
 The `gleam_` prefix belongs to packages that the Gleam core team maintains, so `gleam_mutants` 0.1.0 is retired on Hex.
 Operators, mutant identities, reports, and runtimes behave as they did in 0.1.0.
 
-Replace the development dependency.
+Remove the retired dependency:
 
 ```sh
 gleam remove gleam_mutants
-gleam add --dev smolmut
 ```
+
+Add a source checkout of `smolmut` using the [installation instructions](usage.md#install).
 
 Rename every `[tools.gleam_mutants]` table in `gleam.toml` to `[tools.smolmut]`, including nested tables such as `[tools.smolmut.policy]`.
 smolmut reads only `tools.smolmut`, so a table left under the old name no longer configures a run.
 
 Run the CLI as `gleam run -m smolmut -- run`.
-The npm package and the escript are both named `smolmut`.
 Import the library from `smolmut/api` and `smolmut/types` instead of `gleam_mutants/api` and `gleam_mutants/types`.
 
 Rename environment variables from the `GLEAM_MUTANTS_` prefix to `SMOLMUT_`.

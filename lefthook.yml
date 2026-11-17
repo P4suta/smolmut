@@ -11,8 +11,6 @@ pre-commit:
       run: typos
     verification:
       run: mise run check-verification
-    release:
-      run: mise run check-release
 
 commit-msg:
   commands:

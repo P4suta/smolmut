@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT OR Apache-2.0
 
 [package]
-name = "smolmut-release-fuzz"
+name = "smolmut-verification-fuzz"
 version = "0.0.0"
 edition = "2024"
 publish = false
@@ -13,20 +13,11 @@ cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4.13"
-smolmut-release = { path = "../tools/release" }
-smolmut-release-core = { path = "../tools/release-core" }
 smolmut-verification = { path = "../verification" }
 
 [[bin]]
 name = "core_source"
 path = "fuzz_targets/core_source.rs"
-test = false
-doc = false
-bench = false
-
-[[bin]]
-name = "publication_phase"
-path = "fuzz_targets/publication_phase.rs"
 test = false
 doc = false
 bench = false

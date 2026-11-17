@@ -11,39 +11,29 @@ SPDX-License-Identifier: MIT OR Apache-2.0
 
 ## Status
 
-Proposed.
+Superseded by [manual publication](publish-manually-with-gleam.md).
 
 ## Context
 
-A successful [GitHub release creation](https://docs.github.com/en/rest/releases/releases#create-a-release) supplies a release ID.
-A later collection lookup makes a separate observation and must not replace that confirmed identity.
-The [draft preparation decision](verify-drafts-before-registry-publication.md) separates GitHub write authority from registry authority.
-That separation must also preserve the exact draft across creation, asset uploads, and final publication.
+A successful GitHub release creation returns a release ID.
+Later discovery can omit the draft or select another resource.
 
 ## Decision
 
-Use one pure acquisition dispatcher that discovers once and creates only after confirmed absence.
-Retain the selected or created value, propagate discovery and creation errors, and permit no automatic write retry.
-Validate each draft's nonzero ID, candidate tag, and unpublished state before using it.
-Allow an explicit existing draft ID for recovery, with canonical readback and the same validation.
-Keep the version tag authoritative for the candidate source.
+Discover once, create after confirmed absence, and preserve the validated ID through uploads and final publication.
+Permit recovery with an explicit draft ID after canonical readback.
 
-Address asset uploads by the validated release ID rather than discovering the target again by tag.
-Export that ID from the draft job only after all assets match the candidate.
-Bind finalization to this output, read the draft by ID, and publish that same ID.
-Require the publication response and readback to confirm its tag, ID, immutable state, and complete assets.
-Keep registry jobs read-only with respect to GitHub and preserve every protected environment.
+## Alternatives
 
-Repeated collection reads or backoff would add a visibility assumption without retaining the creation result.
-Discovering a target independently for each upload or finalization could change the selected resource.
-Deleting a partial draft would discard useful identity and evidence.
-These alternatives are rejected.
+Repeated collection discovery could replace the confirmed identity.
 
 ## Consequences
 
-Recovery preserves a matching partial draft and the original candidate bytes.
-The workflow carries a validated numeric identity across its GitHub write phases.
-Source-bound Kani checks establish acquisition identity and call-count invariants under supplied operation results.
-Native HTTP fixtures check the pinned client's protocol with isolated credentials and controlled responses.
-JSON interpretation, integer parsing, production authorization, TLS, and provider responses remain native or external boundaries.
-The [verification contracts](../verification.md) define the checks and their limits.
+The custom controller needed identity validation and recovery across publication phases.
+The successor removes those phases and the controller.
+
+## Confirmation
+
+Native HTTP fixtures checked the client protocol.
+Source-bound Kani checks covered acquisition identity and operation counts under supplied results.
+The successor defines verification after removal.

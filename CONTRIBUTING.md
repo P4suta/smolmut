@@ -9,10 +9,10 @@ Install pinned tools and dependencies with `mise run bootstrap`.
 Run `mise run check` and `mise run test-matrix` before submitting changes.
 Mutation-engine changes also require `mise run test-integration`, `mise run test-property`, `mise run test-faults`, and `mise run dogfood`.
 Run `mise run prove` for changes to the input limits or source derivation.
-Release-core changes also require `mise run prove-release` and its rejecting controls.
-`mise run check-release` replays the preserved parser fuzz corpus without starting an unbounded campaign.
-The full proof and release inventory is described in [verification contracts](docs/verification.md).
-The manual [candidate workflow](docs/releasing.md) owns the complete release campaign; ordinary PR CI stays on one Linux gate.
+`mise run check-verification` replays the preserved source-parser fuzz corpus without starting an unbounded campaign.
+The [verification contracts](docs/verification.md) describe the checks and their limits.
+Continuous integration uses one Linux gate for pull requests.
+The [release guide](docs/releasing.md) describes manual Hex publication with `gleam publish`.
 
 Changes to discovery, compiler validation, runtime execution, or report counts require `mise run test-ecosystem`.
 Allow up to 13 minutes; a deadline stop supplies no passing evidence.

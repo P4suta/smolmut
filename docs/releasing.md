@@ -3,169 +3,37 @@ SPDX-FileCopyrightText: 2026 smolmut contributors
 SPDX-License-Identifier: MIT OR Apache-2.0
 -->
 
-# Release preparation and publication
+# Manual publication
 
-Preparation does not require creating a tag, GitHub Release, registry package, or publishing credential.
-The [checklist](release-checklist.md) distinguishes preparation evidence from later publication approval.
-The [artifact binding decision](adr/publish-verified-candidate-artifacts.md) records the architecture.
+The repository uses the official Gleam publisher for Hex releases.
+The [publication decision](adr/publish-manually-with-gleam.md) removes the custom release controller and automated distributions.
 
-## Prepare without publication
+## Prepare a version
 
-Run `mise run check` before submitting a change.
-The required `CI / required` check runs one Linux gate with compilation, unit tests, metadata and security linters, release-helper tests, the pinned RustSec audit, and native integration tests.
-Release proposals receive the same CI through an explicit dispatch when GitHub's token-created PR would otherwise suppress it.
-The proposal workflow skips GitHub Release creation.
-Merging an implementation change does not publish a version.
-
-The manual `Release candidate evidence` workflow performs the complete preparation campaign on protected `main`.
-Pass its exact current commit as `source_sha` and leave `attest` false for an unsigned rehearsal.
+Update the version in `gleam.toml`, `src/smolmut/version.gleam`, `docs/usage.md`, and `SECURITY.md`.
+Describe user-visible changes in `CHANGELOG.md`.
+Run the maintained checks with the pinned toolchain:
 
 ```sh
-gh workflow run release-candidate.yml --repo P4suta/smolmut \
-  --ref main -f source_sha=FULL_MAIN_COMMIT -f attest=false
+mise run check
+mise run test-matrix
+mise run test-integration
 ```
 
-The Linux build requires the exact fourteen gates in `tools/release/src/evidence.rs`.
-They include the fast gate, integration and runtime tests, minimum-version compatibility, fixed-seed properties, fault tests, benchmark, score dogfood, ecosystem corpora, reproducible packages, both proof gates, SBOM scans, and the pinned RustSec audit.
-Each of Linux, macOS, and Windows runs the integration suite, runtime matrix, and all sixteen mutation-host/test-runtime pairs.
-Every pair must report nonempty, fresh, uncached results with no timeout, execution error, skipped work, or inconsistent count.
-Expected survivors measure compatibility and do not imply a score threshold.
-The minimum-version gate tests Gleam 1.17.0 and Node 20.0.0, plus the current compiler's JavaScript output on Node 20.0.0.
-Node 20 is a compatibility floor, not a recommendation for the publishing runner.
+Follow the checks in [Contributing](../CONTRIBUTING.md) when changing the mutation engine or source derivation.
+Review the source and documentation before publication.
 
-`mise run package` builds the Hex source archive, portable Erlang escript, and portable JavaScript npm archive twice from clean staging copies.
-It compares reproducibility, checks installed consumers and offline reports, and generates one CycloneDX SBOM per distribution.
-SBOM validation requires the matching product version and embedded mutation-testing-elements dependency edge.
-`mise run scan-sboms` requires all three reports to contain no known High or Critical vulnerabilities.
-An advisory result describes the scanner database used by that invocation and does not predict undisclosed vulnerabilities.
+## Publish
 
-The candidate manifest binds the source commit, version, repository and owner IDs, workflow, run, producer attempts, archive targets, byte sizes, SHA-256 and SHA-512 digests, and all four verification receipts.
-`SHA256SUMS` covers the six distribution files with flat download names.
-`CANDIDATE-SHA256SUMS` also covers the receipts and candidate manifest.
-Missing files, unexpected entries, links, malformed metadata, changed bytes, and incomplete inventories fail validation.
-Artifacts expire after seven days; an expired candidate must be prepared again.
-
-Download the unsigned artifact from the completed run and inspect it without signing or publication.
+From the reviewed checkout, run:
 
 ```sh
-gh run download RUN --repo P4suta/smolmut \
-  --name candidate-SOURCE-RUN-ATTEMPT-unsigned --dir build/review-candidate
-mise run release verify build/review-candidate SOURCE VERSION RUN ATTEMPT
+mise x -- gleam publish
 ```
 
-The preparation CLI has no tag, signing, release-creation, or registry-publication command.
-`mise run release-candidate` checks already-built distributions, both proof gates, and SBOM scans locally.
-Local receipts are explicitly local and cannot establish hosted builder identity.
+Review the package details and respond to the publisher's prompts.
+The official command performs Gleam's publication checks and publishes the package and documentation.
+Use the authentication options documented by `mise x -- gleam publish --help`.
 
-## Retain provenance for a future release
-
-A later candidate run with `attest=true` signs only previously verified files in a fresh job without a checkout or execution of candidate code.
-It retains a GitHub artifact-attestation bundle and a separate npm Sigstore bundle with the package PURL and archive SHA-512 subject.
-The workflow verifies both retained bundles and the online attestations against the exact source, protected-main workflow identity, repository, and GitHub-hosted runner constraint.
-An unsigned rehearsal remains useful preparation but cannot pass the publication preflight.
-Candidate attestation is an explicit operator choice and does not create a release or publish to a registry.
-
-The [verification contracts](verification.md) identify the implementation-bound proofs and their trust boundaries.
-Proof success establishes the named pure predicates, not GitHub's API, registry behavior, OS isolation, or every execution of the release adapter.
-
-## Prepare protected publication inputs
-
-The environments have distinct responsibilities.
-`release-prepare` runs version proposals automatically on protected branches without production secrets or a production approval.
-`release-github`, `release-hex`, `release-npm`, and the final `release` environment require the repository owner's approval, restrict deployments to protected branches, and disable administrator bypass.
-The existing single-owner policy permits self-review.
-No production publication credential belongs in the candidate, controller, or version-proposal jobs.
-Their scoped GitHub tokens supply only the permissions declared for those jobs.
-
-Use Doppler for the eventual Hex key and any temporary npm bootstrap token.
-Create a project and separate production configs only when credential issuance is authorized.
-Sync `HEXPM_API_KEY` only to the GitHub `release-hex` environment and `NPM_BOOTSTRAP_TOKEN` only to `release-npm`.
-Verify the native integration's environment destination and visible secret names without reading values into logs.
-No active key, account registration, or registry trust registration is needed for release preparation.
-Never store keys in the repository, command arguments, candidate artifacts, or PR text.
-
-After credential issuance is separately authorized, use the dedicated `Verify registry credential transport` workflow with the selected registry and exact expected username.
-It requires the corresponding environment approval, builds a separate metadata-only executable before supplying the secret, and performs only the authenticated Hex `/users/me` or npm `/-/whoami` GET.
-It never invokes the production release controller, requests signing authority, tags, or publishes.
-Missing credentials, denied metadata permissions, and an unexpected account fail the check.
-Do not broaden a package-scoped key merely to make an account-metadata read succeed.
-This check verifies transport and account identity only; package ownership, publication permission, two-factor requirements, and npm trusted-publisher exchange remain separate obligations.
-It is intentionally unrun until authorized credentials exist.
-
-Hex currently uses its documented API-key authentication to upload the exact verified tarball.
-The first public package requires an authorized owner account and a narrowly scoped, short-lived bootstrap key.
-Use a package-scoped key for subsequent publications and revoke bootstrap access after the first verified publication.
-The helper sends the key through the transport's standard input and never retries an uncertain write automatically.
-Hex's [workload identity](https://hex.pm/docs/workload-identity) requires an existing public package and is not configured as an implicit fallback.
-
-npm uses trusted publishing by default with Node at least 22.14.0 and npm at least 11.5.1.
-Configure its [trusted publisher](https://docs.npmjs.com/trusted-publishers/) for this repository, `.github/workflows/release-publish.yml`, and the `release-npm` environment after the package exists.
-Complete the registry's required first validation within its registration window; do not register prematurely during preparation.
-The first package publication requires the workflow's explicit `bootstrap` choice and a temporary granular token authorized for the package creation.
-Switch subsequent runs to `trusted`, remove the bootstrap secret, and revoke the token.
-Trusted mode rejects a supplied bootstrap token and inherited npm authentication.
-Both modes use isolated npm configuration, disable lifecycle scripts, and attach the retained original candidate provenance rather than attributing old bytes to a newer controller commit.
-Prereleases use the `next` npm tag; stable versions use `latest`.
-
-An absent public package lookup does not reserve a name or prove account ownership or publish permission.
-Account ownership, first-publication authorization, registry configuration, and live credential exchange require their own later validation.
-
-## Publish only after explicit authorization
-
-Merge the checked version proposal before publication.
-Its `.release-please-manifest.json`, `VERSION`, package metadata, CLI version, and changelog must agree.
-Do not merge a release proposal merely to rehearse preparation.
-
-The manual `Publish verified release` workflow selects a source commit, version, successful candidate run and completion attempt, and explicit npm authentication mode.
-For a matching partial draft, its optional `draft_release_id` input selects the exact existing release for approved inspection and recovery.
-The preflight includes that requested ID in the publication plan; the approved draft phase must read it by ID and validate its tag and unpublished state before any upload.
-The read-only preflight checks protected-main ancestry, the merged version proposal, the complete successful run and latest job producers, artifact bytes, retained and online attestations, remote tag, visible releases, and registry archives.
-GitHub hides draft releases from tokens without push authority, so this preflight can't establish the current draft inventory.
-The plan names the approved draft phase as the owner of that check.
-It emits a concrete `release-plan.json` before any production approval.
-The controller binaries are compiled and tested without publication privileges, attested in a fresh job, and verified before each approved phase executes them.
-
-1. `release-github` creates or reuses the matching tag and GitHub draft, uploads only missing verified files, and reads every asset back.
-2. `release-hex` publishes or reuses the identical Hex tarball and verifies the downloaded registry archive.
-3. `release-npm` publishes or reuses the identical npm tarball with original provenance and verifies the downloaded registry archive.
-4. `release` finalizes the draft only after the tag, complete assets, and both registry archives match.
-
-The npm registry [scans new publications before making them installable](https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/).
-After one successful npm publish, the controller checks the public archive up to 31 times with 30-second waits between missing reads.
-Only matching candidate bytes complete the phase.
-A conflicting archive or read error stops immediately.
-Exhausted checks report an accepted upload with unresolved public availability and perform no additional upload.
-
-Between draft preparation and the registry approvals, `registry-ready` runs both registry prerequisite checks with Contents read and Actions read permissions and no registry secrets.
-It verifies the successful draft producer in the same active controller run, candidate identity and provenance, matching tag, remote archive state, and required npm client and authentication mode.
-The production registry phases call the same preparation function before any upload.
-Their draft handoff depends on GitHub's truthful job outcomes and execution of the checked controller and workflow.
-The npm prerequisite check also resolves the actual publication options through an offline configuration query using the same command builder.
-It selects the retained provenance bundle without supplying the mutually exclusive automatic-provenance option, including an explicit false value.
-The probe uses empty isolated configuration and no registry credentials.
-The [draft verification decision](adr/verify-drafts-before-registry-publication.md) records this boundary.
-
-The final inventory includes the three archives, three SBOMs, four receipts, candidate manifest, two candidate checksum files, two attestation bundles, and `RELEASE-SHA256SUMS` covering the other fifteen files.
-Draft acquisition preserves the validated creation response or selected existing ID.
-Uploads address that release ID directly, and the successful draft job exports it to finalization.
-Finalization reads and publishes the same ID and requires an immutable published response and complete asset readback.
-The [release identity decision](adr/preserve-confirmed-release-identities.md) records this boundary.
-GitHub's immutable-release setting and protected version tags prevent later replacement after publication.
-No phase rebuilds candidate packages or overwrites a conflicting remote output.
-
-## Recover from interruption
-
-A transport failure leaves publication uncertain, even if a request may have reached the provider.
-Inspect remote state before retrying the affected phase.
-An accepted npm upload may also remain unavailable while the registry scans it.
-Wait for the original version and archive, then rerun the failed jobs to reuse matching bytes.
-Matching bytes may be reused; a missing output may be created; conflicting bytes stop the workflow before further writes.
-The draft remains unpublished if either registry phase fails.
-Do not delete a successful registry version, move a tag, clobber an asset, or automatically roll back a partial publication.
-An incompatible immutable output requires a new version and fresh candidate evidence.
-
-Partial GitHub reruns preserve the actual producer attempt of each receipt, assembled candidate, signer, and controller artifact.
-Collection selects only eligible artifacts from the same source and run, compares them with the latest successful named job, and rejects a later failed, skipped, or cancelled check.
-The publication preflight also requires the latest run completion to match the selected completion attempt.
-A previously successful attempt cannot bypass a newer failed run.
-An already published release is refused by the mutation path and must be inspected with read-only operations.
+The repository has no npm or escript distribution process.
+Published versions and GitHub releases remain available as historical artifacts.
